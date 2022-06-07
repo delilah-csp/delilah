@@ -1,0 +1,19 @@
+#ifndef DELILAH_CONF_HERMES
+#define DELILAH_CONF_HERMES
+
+#include "util/units.h"
+
+/* DYNAMIC SETTINGS */
+#define HERMES_UBPF_ENGINES 4
+
+#define HERMES_PROG_SLOT_COUNT 8
+#define HERMES_PROG_SLOT_SIZE (1 * MiB)
+
+#define HERMES_DATA_SLOT_COUNT 4
+#define HERMES_DATA_SLOT_SIZE (128 * MiB)
+
+#define HERMES_IRQ_COUNT 4
+#define HERMES_IRQ_REQ_BASE 504
+#define HERMES_IRQ_ACK_BASE 500
+
+#endif
