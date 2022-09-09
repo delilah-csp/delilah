@@ -36,9 +36,9 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/hermes/configure.c \
            file://src/irq/gpio.c \
            file://src/loader/loader.c \
-           file://src/mem/cma.c \
 	   file://src/mem/direct.c \
            file://src/mem/malloc.c \
+           file://src/mem/udma.c \
            file://src/ubpf/ubpf_loader.c \
            file://src/ubpf/ubpf_vm.c \
            file://src/util/log.c \

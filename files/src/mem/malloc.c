@@ -4,6 +4,7 @@
 #include "mem/mem.h"
 #include "util/errors.h"
 #include "util/log.h"
+#include "util/units.h"
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,8 +33,8 @@ delilah_mem_alloc_bar(size_t phys, size_t size)
   phys_bar = phys;
 
   if ((bar_fd = open("/dev/mem", O_RDWR | O_SYNC)) != -1) {
-    mmap_bar =
-      mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, bar_fd, phys);
+    mmap_bar = mmap(NULL, size, PROT_READ | PROT_WRITE,
+                    MAP_SHARED | MAP_NORESERVE | MAP_POPULATE, bar_fd, phys);
 
     if (mmap_bar == NULL)
       return DELILAH_ERRORS_MEM_MMAP;
@@ -49,13 +50,13 @@ delilah_mem_alloc_bar(size_t phys, size_t size)
 return_t
 delilah_mem_alloc_data(size_t phys, size_t size)
 {
-  virt_data = malloc(size);
+  virt_data = aligned_alloc(4 * KiB, size);
   phys_data = phys;
   data_size = size;
 
   if ((data_fd = open("/dev/mem", O_RDWR | O_SYNC)) != -1) {
-    mmap_data =
-      mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, data_fd, phys);
+    mmap_data = mmap(NULL, size, PROT_READ | PROT_WRITE,
+                     MAP_SHARED | MAP_NORESERVE | MAP_POPULATE, data_fd, phys);
 
     if (mmap_data == NULL)
       return DELILAH_ERRORS_MEM_MMAP;
@@ -101,6 +102,8 @@ delilah_mem_sync_get(uint8_t type, uint8_t id)
   if (type == 0x1)
     size = HERMES_DATA_SLOT_SIZE;
 
+  log_debug("Synchronizing %p bytes in from %p to %p", size, mmap_data + offz,
+            virt_data + offz);
   memcpy(virt_data + offz, mmap_data + offz, size);
 
   return 0;
@@ -127,6 +130,8 @@ delilah_mem_sync_set(uint8_t type, uint8_t id)
   if (type == 0x1)
     size = HERMES_DATA_SLOT_SIZE;
 
+  log_debug("Synchronizing %p bytes out from %p to %p", size, virt_data + offz,
+            mmap_data + offz);
   memcpy(mmap_data + offz, virt_data + offz, size);
 
   return 0;
