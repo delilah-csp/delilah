@@ -16,26 +16,21 @@ delilah_alloc(struct delilah_t* delilah)
 {
   return_t rv;
 
-  rv = delilah_mem_alloc_bar(DELILAH_BAR0_LOC, DELILAH_BAR0_SIZE);
+  rv = delilah_mem_alloc_bar(delilah);
 
   if (rv > 0) {
     log_fatal("Unable to allocate memory.");
-    log_fatal(" => BAR0: phys %p, size %ld, log %p", DELILAH_BAR0_LOC,
-              DELILAH_BAR0_SIZE, rv);
+    log_fatal(" => BAR0: log %p", rv);
     return rv;
   }
 
-  rv = delilah_mem_alloc_data(DELILAH_DATA_LOC, DELILAH_DATA_SIZE);
+  rv = delilah_mem_alloc_data(delilah);
 
   if (rv > 0) {
     log_fatal("Unable to allocate memory.");
-    log_fatal(" => DATA: phys %p, size %ld, log %p", DELILAH_DATA_LOC,
-              DELILAH_DATA_SIZE, rv);
+    log_fatal(" => DATA: phys %p, size %ld, log %p", rv);
     return rv;
   }
-
-  delilah->bar0 = delilah_mem_get_bar();
-  delilah->data = delilah_mem_get_data();
 
   return 0x0;
 }

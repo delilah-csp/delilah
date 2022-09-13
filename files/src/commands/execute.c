@@ -32,15 +32,15 @@ delilah_command_execute(struct delilah_thread_t* thread,
   timersub(&time_end, &time_start, &time_sync_in);
 
   elf = delilah->bar0->ehpssze >= SELFMAG &&
-        !memcmp(delilah->data->program[prog_slot], ELFMAG, SELFMAG);
+        !memcmp(delilah->program[prog_slot], ELFMAG, SELFMAG);
 
   gettimeofday(&time_start, NULL);
   if (elf)
     rv = ubpf_load_elf(delilah->engine[thread->engine],
-                       &delilah->data->program[prog_slot], prog_len, &errmsg);
+                       delilah->program[prog_slot], prog_len, &errmsg);
   else
     rv = ubpf_load(delilah->engine[thread->engine],
-                   &delilah->data->program[prog_slot], prog_len, &errmsg);
+                   delilah->program[prog_slot], prog_len, &errmsg);
   gettimeofday(&time_end, NULL);
   timersub(&time_end, &time_start, &time_load);
 
@@ -55,7 +55,7 @@ delilah_command_execute(struct delilah_thread_t* thread,
   }
 
   gettimeofday(&time_start, NULL);
-  ubpf_exec(delilah->engine[thread->engine], &delilah->data->data[data_slot],
+  ubpf_exec(delilah->engine[thread->engine], delilah->data[data_slot],
             delilah->bar0->ehdssze, &ret);
   gettimeofday(&time_end, NULL);
   timersub(&time_end, &time_start, &time_exec);
