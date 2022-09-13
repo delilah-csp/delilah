@@ -9,8 +9,8 @@ typedef int return_t;
 
 struct delilah_slots_t
 {
-  uint8_t *program[HERMES_PROG_SLOT_COUNT][HERMES_PROG_SLOT_SIZE];
-  uint8_t *data[HERMES_DATA_SLOT_COUNT][HERMES_DATA_SLOT_SIZE];
+  uint8_t* program[HERMES_PROG_SLOT_COUNT][HERMES_PROG_SLOT_SIZE];
+  uint8_t* data[HERMES_DATA_SLOT_COUNT][HERMES_DATA_SLOT_SIZE];
 };
 
 struct delilah_t

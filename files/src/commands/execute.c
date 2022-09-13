@@ -39,8 +39,8 @@ delilah_command_execute(struct delilah_thread_t* thread,
     rv = ubpf_load_elf(delilah->engine[thread->engine],
                        delilah->program[prog_slot], prog_len, &errmsg);
   else
-    rv = ubpf_load(delilah->engine[thread->engine],
-                   delilah->program[prog_slot], prog_len, &errmsg);
+    rv = ubpf_load(delilah->engine[thread->engine], delilah->program[prog_slot],
+                   prog_len, &errmsg);
   gettimeofday(&time_end, NULL);
   timersub(&time_end, &time_start, &time_load);
 
