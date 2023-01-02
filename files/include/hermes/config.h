@@ -16,17 +16,17 @@ union hermes_cmd_ctrl
 
 struct hermes_bar0
 {
-  uint32_t ehver;           /* 0x00 */
-  char ehbld[48];           /* 0x04 */
-  uint8_t eheng;            /* 0x34 */
-  uint8_t ehpslot;          /* 0x35 */
-  uint8_t ehdslot;          /* 0x36 */
-  uint8_t rsv0;             /*      */
-  uint32_t ehpsoff;         /* 0x38 */
-  uint32_t ehpssze;         /* 0x3C */
-  uint32_t ehdsoff;         /* 0x40 */
-  uint32_t ehdssze;         /* 0x44 */
-  char rsv1[0x1000 - 0x48]; /* 0x48 */
+  uint32_t ehver;
+  char ehbld[48];
+  uint8_t eheng;
+  uint8_t ehpslot;
+  uint8_t ehdslot;
+  uint8_t rsv0;
+  uint64_t ehpsoff;
+  uint64_t ehpssze;
+  uint64_t ehdsoff;
+  uint64_t ehdssze;
+  char rsv1[0x1000 - 0x58];
 
   struct hermes_cmd commands[HERMES_UBPF_ENGINES]; /* 0x1000 */
   char rsv2[0x1000 - (48 * HERMES_UBPF_ENGINES)];  /*        */
