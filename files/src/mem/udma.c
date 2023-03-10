@@ -1,5 +1,3 @@
-#ifdef DELILAH_USE_UDMA
-
 #include "conf/hermes.h"
 #include "delilah.h"
 #include "mem/mem.h"
@@ -144,5 +142,3 @@ delilah_mem_unalloc_data()
                                                     : HERMES_DATA_SLOT_SIZE);
   }
 }
-
-#endif

@@ -1,5 +1,3 @@
-#ifdef DELILAH_USE_GPIO
-
 #include "conf/hermes.h"
 #include "delilah.h"
 #include "irq/irq.h"
@@ -161,5 +159,3 @@ delilah_irq_close(struct delilah_t* delilah)
     pthread_join(threads[i].thread_id, NULL);
   }
 }
-
-#endif
