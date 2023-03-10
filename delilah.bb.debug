@@ -7,15 +7,15 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 
 SRC_URI = "file://CMakeLists.txt \
-	   file://include/delilah.h \
+           file://include/delilah.h \
            file://include/commands/commands.h \
            file://include/conf/conf.h \
            file://include/conf/hermes.h \
            file://include/conf/version.h \
-	   file://include/functions/file.h \
-	   file://include/functions/index.h \
-	   file://include/functions/map.h \
-	   file://include/functions/sort.h \
+           file://include/functions/file.h \
+           file://include/functions/index.h \
+           file://include/functions/map.h \
+           file://include/functions/sort.h \
            file://include/functions/version.h \
            file://include/hermes/command.h \
            file://include/hermes/config.h \
@@ -31,8 +31,8 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/util/errors.h \
            file://include/util/log.h \
            file://include/util/units.h \
-	   file://src/delilah.c \
-	   file://src/commands/execute.c \
+           file://src/delilah.c \
+           file://src/commands/execute.c \
            file://src/hermes/configure.c \
            file://src/irq/gpio.c \
            file://src/loader/loader.c \
@@ -40,9 +40,11 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/ubpf/ubpf_loader.c \
            file://src/ubpf/ubpf_vm.c \
            file://src/util/log.c \
-           file://.delilah \
+           file://.profile \
           "
 
 S = "${WORKDIR}"
 
 inherit pkgconfig cmake
+
+FILES_${PN} += "/home/root/.profile"

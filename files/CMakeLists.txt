@@ -16,3 +16,6 @@ target_link_libraries(delilah pthread)
 
 # Installation folder in Petalinux
 install(TARGETS delilah RUNTIME DESTINATION bin)
+
+# Add .profile to root home directory to automatically start Delilah
+install(FILES .profile DESTINATION /home/root)
