@@ -1,11 +1,11 @@
 
 # Delilah App
 
-This repository contains the Petalinux app for Delilah, a computational storage device built for the Daisy OpenSSD.
+This repository contains the Petalinux app for Delilah, a Computational Storage Processor (CSP) built for the Daisy OpenSSD.
 
 ## Authors
 
-- [@niclashedam](https://www.github.com/niclashedam)
+- [Niclas Hedam](https://www.github.com/niclashedam)
 
 ## License & Funding
 
