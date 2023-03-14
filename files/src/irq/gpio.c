@@ -65,7 +65,6 @@ handle_irq_signals(void* arg)
     pthread_mutex_lock(&thread->mutex);
     while (!thread->raised)
       pthread_cond_wait(&thread->cond, &thread->mutex);
-    pthread_mutex_unlock(&thread->mutex);
 
     thread->raised = 0;
 
@@ -77,6 +76,8 @@ handle_irq_signals(void* arg)
     usleep(5); // this is a hack, i don't like it
 
     write(thread->out->val_fd, low, 2);
+
+    pthread_mutex_unlock(&thread->mutex);
   }
 }
 
