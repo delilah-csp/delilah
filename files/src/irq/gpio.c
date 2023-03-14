@@ -71,11 +71,24 @@ handle_irq_signals(void* arg)
     if (thread->delilah->exiting)
       pthread_exit(NULL);
 
+    // IRQ triggering is done by toggling the REQ GPIO
+    // The correct solution would be to use the ACK GPIO to identify when the
+    // host have serviced the IRQ However, the ACK GPIO is not always acting as
+    // expected, so we use a timeout instead This makes me sad, but it works
     write(thread->out->val_fd, high, 2);
+    fsync(thread->out->val_fd);
 
-    usleep(5); // this is a hack, i don't like it
+    // High enough to trigger the IRQ, but low enough to not cause critical
+    // timing issues
+    usleep(500);
 
+    // Clear the REQ GPIO
     write(thread->out->val_fd, low, 2);
+    fsync(thread->out->val_fd);
+
+    // High enough to trigger the IRQ, but low enough to not cause critical
+    // timing issues
+    usleep(500);
 
     pthread_mutex_unlock(&thread->mutex);
   }
