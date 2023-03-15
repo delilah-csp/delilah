@@ -80,7 +80,7 @@ handle_irq_signals(void* arg)
 
     // High enough to trigger the IRQ, but low enough to not cause critical
     // timing issues
-    usleep(500);
+    usleep(50);
 
     // Clear the REQ GPIO
     write(thread->out->val_fd, low, 2);
@@ -88,7 +88,7 @@ handle_irq_signals(void* arg)
 
     // High enough to trigger the IRQ, but low enough to not cause critical
     // timing issues
-    usleep(500);
+    usleep(50);
 
     pthread_mutex_unlock(&thread->mutex);
   }
