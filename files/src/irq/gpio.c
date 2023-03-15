@@ -80,7 +80,7 @@ handle_irq_signals(void* arg)
 
     // High enough to trigger the IRQ, but low enough to not cause critical
     // timing issues
-    usleep(50);
+    usleep(10);
 
     // Clear the REQ GPIO
     write(thread->out->val_fd, low, 2);
@@ -88,7 +88,7 @@ handle_irq_signals(void* arg)
 
     // High enough to trigger the IRQ, but low enough to not cause critical
     // timing issues
-    usleep(50);
+    usleep(10);
 
     pthread_mutex_unlock(&thread->mutex);
   }
@@ -105,7 +105,7 @@ delilah_irq_configure(struct delilah_t* delilah)
   char in[3] = { 'i', 'n', '\0' };
   char out[4] = { 'o', 'u', 't', '\0' };
 
-  export_fd = open(GPIO_EXPORT, O_WRONLY);
+  export_fd = open(GPIO_EXPORT, O_WRONLY | O_SYNC);
   if (export_fd < 0)
     return DELILAH_ERRORS_IRQ_GPIO_FD;
 
@@ -117,8 +117,8 @@ delilah_irq_configure(struct delilah_t* delilah)
     sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, i);
     sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
 
-    gpio[j].dir_fd = open(gpio_dir_file, O_RDWR);
-    gpio[j].val_fd = open(gpio_val_file, O_RDWR);
+    gpio[j].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
+    gpio[j].val_fd = open(gpio_val_file, O_RDWR | O_SYNC);
 
     if (gpio[j].dir_fd < 0)
       return DELILAH_ERRORS_IRQ_GPIO_FD;
@@ -137,8 +137,8 @@ delilah_irq_configure(struct delilah_t* delilah)
     sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, i);
     sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
 
-    gpio[j].dir_fd = open(gpio_dir_file, O_RDWR);
-    gpio[j].val_fd = open(gpio_val_file, O_RDWR);
+    gpio[j].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
+    gpio[j].val_fd = open(gpio_val_file, O_RDWR | O_SYNC);
 
     if (gpio[j].dir_fd < 0)
       return DELILAH_ERRORS_IRQ_GPIO_FD;
