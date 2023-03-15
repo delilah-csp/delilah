@@ -25,9 +25,14 @@ delilah_command_execute(struct delilah_thread_t* thread,
   uint8_t data_slot = req->run_prog.data_slot;
   uint32_t prog_len = req->run_prog.prog_len;
 
+  uint32_t invalidation_size = req->run_prog.invalidation_size;
+  uint32_t invalidation_offset = req->run_prog.invalidation_offset;
+  uint32_t flush_size = req->run_prog.flush_size;
+  uint32_t flush_offset = req->run_prog.flush_offset;
+
   gettimeofday(&time_start, NULL);
-  delilah_mem_sync_get(0, prog_slot);
-  delilah_mem_sync_get(1, data_slot);
+  delilah_mem_sync_get(0, prog_slot, prog_len, 0);
+  delilah_mem_sync_get(1, data_slot, invalidation_size, invalidation_offset);
   gettimeofday(&time_end, NULL);
   timersub(&time_end, &time_start, &time_sync_in);
 
@@ -68,7 +73,7 @@ delilah_command_execute(struct delilah_thread_t* thread,
   res->run_prog.ebpf_ret = ret;
 
   gettimeofday(&time_start, NULL);
-  delilah_mem_sync_set(1, data_slot);
+  delilah_mem_sync_set(1, data_slot, flush_size, flush_offset);
   gettimeofday(&time_end, NULL);
   timersub(&time_end, &time_start, &time_sync_out);
 

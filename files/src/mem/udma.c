@@ -101,11 +101,17 @@ delilah_mem_get_data()
 }
 
 return_t
-delilah_mem_sync_get(uint8_t type, uint8_t id)
+delilah_mem_sync_get(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
 {
   unsigned char attr[1024];
-  int one = 1;
-  sprintf(attr, "%d", one);
+  unsigned int   sync_direction = 0;
+  unsigned long  sync_for_cpu   = 1;
+  
+  // If size is 0, set it to the full buffer
+  if (size == 0) size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+
+  sprintf(attr, "0x%08X%08X", (offset & 0xFFFFFFFF), (size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_cpu);
+
   if (write(sync_ps_fd[type == 0 ? id : (id + HERMES_PROG_SLOT_COUNT)], attr,
             strlen(attr)) <= 0) {
     log_error("Failed to invalidate PS cache");
@@ -113,11 +119,18 @@ delilah_mem_sync_get(uint8_t type, uint8_t id)
 }
 
 return_t
-delilah_mem_sync_set(uint8_t type, uint8_t id)
+delilah_mem_sync_set(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
 {
   unsigned char attr[1024];
-  int one = 1;
-  sprintf(attr, "%d", one);
+
+  unsigned int   sync_direction = 0;
+  unsigned long  sync_for_cpu   = 0;
+  
+  // If size is 0, set it to the full buffer
+  if (size == 0) size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+
+  sprintf(attr, "0x%08X%08X", (offset & 0xFFFFFFFF), (size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_cpu);
+
   if (write(sync_pl_fd[type == 0 ? id : (id + HERMES_PROG_SLOT_COUNT)], attr,
             strlen(attr)) <= 0) {
     log_error("Failed to invalidate PL cache");

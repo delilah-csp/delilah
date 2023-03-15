@@ -22,6 +22,10 @@ struct hermes_cmd_req
       volatile uint8_t data_slot;
       uint16_t rsv;
       volatile uint32_t prog_len;
+      volatile uint32_t invalidation_size;
+      volatile uint32_t invalidation_offset;
+      volatile uint32_t flush_size;
+      volatile uint32_t flush_offset;
     } run_prog;
 
     volatile uint8_t cmd_specific[24];
