@@ -118,7 +118,7 @@ delilah_irq_configure(struct delilah_t* delilah)
     sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
 
     gpio[j].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
-    gpio[j].val_fd = open(gpio_val_file, O_RDWR | O_SYNC);
+    gpio[j].val_fd = open(gpio_val_file, O_RDONLY | O_SYNC);
 
     if (gpio[j].dir_fd < 0)
       return DELILAH_ERRORS_IRQ_GPIO_FD;
@@ -138,7 +138,7 @@ delilah_irq_configure(struct delilah_t* delilah)
     sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
 
     gpio[j].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
-    gpio[j].val_fd = open(gpio_val_file, O_RDWR | O_SYNC);
+    gpio[j].val_fd = open(gpio_val_file, O_WRONLY | O_SYNC);
 
     if (gpio[j].dir_fd < 0)
       return DELILAH_ERRORS_IRQ_GPIO_FD;
