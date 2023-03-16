@@ -11,13 +11,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define DELILAH_GPIO_PAIRS 4
-#define DELILAH_GPIO_BASE_IN 500
 #define DELILAH_GPIO_BASE_OUT 504
-
-#if DELILAH_GPIO_PAIRS != HERMES_UBPF_ENGINES
-#error "Number of GPIOs must be the same as uBPF engines"
-#endif
 
 #define GPIO_ROOT "/sys/class/gpio"
 #define GPIO_EXPORT "/sys/class/gpio/export"
@@ -29,13 +23,12 @@ struct gpio_t
 };
 
 int export_fd;
-static struct gpio_t gpio[DELILAH_GPIO_PAIRS * 2];
+static struct gpio_t gpio[HERMES_UBPF_ENGINES];
 
 struct irq_thread_t
 {
   uint8_t id;
   uint8_t raised;
-  struct gpio_t* in;
   struct gpio_t* out;
   pthread_t thread_id;
   pthread_mutex_t mutex;
@@ -71,24 +64,24 @@ handle_irq_signals(void* arg)
     if (thread->delilah->exiting)
       pthread_exit(NULL);
 
-    // IRQ triggering is done by toggling the REQ GPIO
-    // The correct solution would be to use the ACK GPIO to identify when the
-    // host have serviced the IRQ However, the ACK GPIO is not always acting as
-    // expected, so we use a timeout instead This makes me sad, but it works
+    // Set GPIO high to signal IRQ to the host
     write(thread->out->val_fd, high, 2);
     fsync(thread->out->val_fd);
 
-    // High enough to trigger the IRQ, but low enough to not cause critical
-    // timing issues
-    usleep(10);
+    // Wait for host to acknowledge IRQ
+    volatile uint8_t *ack = &thread->delilah->bar0->cmdctrl[thread->id].ehcmdack;
+    while(true)
+    {
+      if(*ack == 1) break;
+      usleep(1);
+    }
 
-    // Clear the REQ GPIO
+    // Clear the ack bit
+    *ack = 0;
+
+    // Set GPIO low to signal IRQ is handled
     write(thread->out->val_fd, low, 2);
     fsync(thread->out->val_fd);
-
-    // High enough to trigger the IRQ, but low enough to not cause critical
-    // timing issues
-    usleep(10);
 
     pthread_mutex_unlock(&thread->mutex);
   }
@@ -100,59 +93,43 @@ delilah_irq_configure(struct delilah_t* delilah)
   char channel_str[5];
   char gpio_dir_file[128];
   char gpio_val_file[128];
-  int j = 0;
 
-  char in[3] = { 'i', 'n', '\0' };
   char out[4] = { 'o', 'u', 't', '\0' };
 
+  // Open the GPIO export file to export the interrupt pints to userspace
   export_fd = open(GPIO_EXPORT, O_WRONLY | O_SYNC);
+
   if (export_fd < 0)
     return DELILAH_ERRORS_IRQ_GPIO_FD;
 
-  for (int i = DELILAH_GPIO_BASE_IN;
-       i < DELILAH_GPIO_BASE_IN + DELILAH_GPIO_PAIRS; i++) {
+  // Start at the base (500) and iterate for the number of engines
+  for (int i = DELILAH_GPIO_BASE_OUT; i <  DELILAH_GPIO_BASE_OUT + HERMES_UBPF_ENGINES; i++) {
+    // Export the GPIO to userspace
     sprintf(channel_str, "%d", i);
     write(export_fd, channel_str, (strlen(channel_str) + 1));
 
+    // Determine the name of the direction and value files for the GPIO
     sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, i);
     sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
 
-    gpio[j].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
-    gpio[j].val_fd = open(gpio_val_file, O_RDONLY | O_SYNC);
+    // Open the direction and value files for the GPIO
+    gpio[i].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
+    gpio[i].val_fd = open(gpio_val_file, O_WRONLY | O_SYNC);
 
-    if (gpio[j].dir_fd < 0)
+    // Check if the files were opened successfully
+    if (gpio[i].dir_fd < 0)
       return DELILAH_ERRORS_IRQ_GPIO_FD;
-    if (gpio[j].val_fd < 0)
+    if (gpio[i].val_fd < 0)
       return DELILAH_ERRORS_IRQ_GPIO_FD;
 
-    write(gpio[j].dir_fd, in, 3);
-    j++;
+    // Write the direction to the GPIO (out)
+    write(gpio[i].dir_fd, out, 4);
   }
 
-  for (int i = DELILAH_GPIO_BASE_OUT;
-       i < DELILAH_GPIO_BASE_OUT + DELILAH_GPIO_PAIRS; i++) {
-    sprintf(channel_str, "%d", i);
-    write(export_fd, channel_str, (strlen(channel_str) + 1));
-
-    sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, i);
-    sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
-
-    gpio[j].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
-    gpio[j].val_fd = open(gpio_val_file, O_WRONLY | O_SYNC);
-
-    if (gpio[j].dir_fd < 0)
-      return DELILAH_ERRORS_IRQ_GPIO_FD;
-    if (gpio[j].val_fd < 0)
-      return DELILAH_ERRORS_IRQ_GPIO_FD;
-
-    write(gpio[j].dir_fd, out, 4);
-    j++;
-  }
-
+  // For each engine, create a thread to handle IRQs
   for (int i = 0; i < HERMES_UBPF_ENGINES; i++) {
-    threads[i].id = 0;
-    threads[i].in = &gpio[i];
-    threads[i].out = &gpio[i + HERMES_UBPF_ENGINES];
+    threads[i].id = i;
+    threads[i].out = &gpio[HERMES_UBPF_ENGINES];
     threads[i].delilah = delilah;
 
     pthread_mutex_init(&threads[i].mutex, NULL);

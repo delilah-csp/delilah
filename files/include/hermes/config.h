@@ -4,14 +4,11 @@
 #include "conf/hermes.h"
 #include "hermes/command.h"
 
-union hermes_cmd_ctrl
-{
-  struct
-  {
-    volatile uint8_t ehcmdexec;
-    volatile uint8_t ehcmddone;
-  };
-  volatile uint8_t ehcmdctrl;
+struct delilah_cmd_ctrl {
+	uint8_t ehcmdexec;
+	uint8_t ehcmddone;
+	uint8_t ehcmdack;
+	uint8_t rsv[5];
 };
 
 struct hermes_bar0
@@ -31,7 +28,7 @@ struct hermes_bar0
   struct hermes_cmd commands[HERMES_UBPF_ENGINES]; /* 0x1000 */
   char rsv2[0x1000 - (48 * HERMES_UBPF_ENGINES)];  /*        */
 
-  union hermes_cmd_ctrl cmdctrl[HERMES_UBPF_ENGINES]; /* 0x2000 */
+  struct hermes_cmd_ctrl cmdctrl[HERMES_UBPF_ENGINES]; /* 0x2000 */
 };
 
 struct hermes_slots
