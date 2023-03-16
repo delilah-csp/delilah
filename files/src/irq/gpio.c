@@ -1,4 +1,5 @@
 #include "conf/hermes.h"
+#include "hermes/config.h"
 #include "delilah.h"
 #include "irq/irq.h"
 #include "util/errors.h"

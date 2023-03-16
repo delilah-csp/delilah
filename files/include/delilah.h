@@ -18,7 +18,7 @@ struct delilah_t
   int exiting;
   return_t rv;
 
-  struct hermes_bar0* bar0;
+  struct delilah_bar0* bar0;
   void* program[HERMES_PROG_SLOT_COUNT];
   void* data[HERMES_DATA_SLOT_COUNT];
 

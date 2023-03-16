@@ -12,7 +12,7 @@
 return_t
 delilah_hermes_configure(struct delilah_t* delilah)
 {
-  struct hermes_bar0* bar0 = delilah->bar0;
+  struct delilah_bar0* bar0 = delilah->bar0;
 
   bar0->ehver = 0;                        // Protocol version
   bar0->eheng = HERMES_UBPF_ENGINES;      // Number of engines

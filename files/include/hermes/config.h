@@ -11,7 +11,7 @@ struct delilah_cmd_ctrl {
 	uint8_t rsv[5];
 };
 
-struct hermes_bar0
+struct delilah_bar0
 {
   uint32_t ehver;
   char ehbld[48];
@@ -28,7 +28,7 @@ struct hermes_bar0
   struct hermes_cmd commands[HERMES_UBPF_ENGINES]; /* 0x1000 */
   char rsv2[0x1000 - (48 * HERMES_UBPF_ENGINES)];  /*        */
 
-  struct hermes_cmd_ctrl cmdctrl[HERMES_UBPF_ENGINES]; /* 0x2000 */
+  struct delilah_cmd_ctrl cmdctrl[HERMES_UBPF_ENGINES]; /* 0x2000 */
 };
 
 struct hermes_slots

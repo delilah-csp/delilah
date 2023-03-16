@@ -11,7 +11,7 @@ struct delilah_thread_t
 
   struct delilah_t* delilah;
   struct hermes_cmd* cmd;
-  struct hermes_cmd_ctrl* ctrl;
+  struct delilah_cmd_ctrl* ctrl;
 };
 
 return_t delilah_loader_configure(struct delilah_t* delilah);
