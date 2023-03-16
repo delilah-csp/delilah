@@ -101,6 +101,7 @@ delilah_irq_configure(struct delilah_t* delilah)
   char channel_str[5];
   char gpio_dir_file[128];
   char gpio_val_file[128];
+  int base;
 
   char out[4] = { 'o', 'u', 't', '\0' };
 
@@ -111,14 +112,16 @@ delilah_irq_configure(struct delilah_t* delilah)
     return DELILAH_ERRORS_IRQ_GPIO_FD;
 
   // Start at the base (500) and iterate for the number of engines
-  for (int i = DELILAH_GPIO_BASE_OUT; i <  DELILAH_GPIO_BASE_OUT + HERMES_UBPF_ENGINES; i++) {
+  for (int i = 0; i < HERMES_UBPF_ENGINES; i++) {
+    base = DELILAH_GPIO_BASE_OUT + i;
+
     // Export the GPIO to userspace
-    sprintf(channel_str, "%d", i);
+    sprintf(channel_str, "%d", base);
     write(export_fd, channel_str, (strlen(channel_str) + 1));
 
     // Determine the name of the direction and value files for the GPIO
-    sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, i);
-    sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, i);
+    sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, base);
+    sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, base);
 
     // Open the direction and value files for the GPIO
     gpio[i].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
@@ -132,12 +135,9 @@ delilah_irq_configure(struct delilah_t* delilah)
 
     // Write the direction to the GPIO (out)
     write(gpio[i].dir_fd, out, 4);
-  }
 
-  // For each engine, create a thread to handle IRQs
-  for (int i = 0; i < HERMES_UBPF_ENGINES; i++) {
     threads[i].id = i;
-    threads[i].out = &gpio[HERMES_UBPF_ENGINES];
+    threads[i].out = &gpio[i];
     threads[i].delilah = delilah;
 
     pthread_mutex_init(&threads[i].mutex, NULL);
