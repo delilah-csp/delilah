@@ -29,6 +29,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/ubpf/ubpf_int.h \
            file://include/util/errors.h \
            file://include/util/log.h \
+           file://include/util/time.h \
            file://include/util/units.h \
            file://src/delilah.c \
            file://src/commands/execute.c \

@@ -4,6 +4,7 @@
 #include "irq/irq.h"
 #include "util/errors.h"
 #include "util/log.h"
+#include "util/time.h"
 #include <fcntl.h>
 #include <pthread.h>
 #include <semaphore.h>
@@ -52,6 +53,7 @@ void*
 handle_irq_signals(void* arg)
 {
   struct irq_thread_t* thread = arg;
+  double elapsed;
   char high[2] = { '1', '\0' };
   char low[2] = { '0', '\0' };
 
@@ -64,6 +66,8 @@ handle_irq_signals(void* arg)
 
     if (thread->delilah->exiting)
       pthread_exit(NULL);
+
+    struct timeval start = clock_start();
 
     // Set GPIO high to signal IRQ to the host
     write(thread->out->val_fd, high, 2);
@@ -83,6 +87,9 @@ handle_irq_signals(void* arg)
     // Set GPIO low to signal IRQ is handled
     write(thread->out->val_fd, low, 2);
     fsync(thread->out->val_fd);
+
+    elapsed = clock_end(start);
+    log_debug(" => (%i) IRQ %lf s", thread->id, elapsed);
 
     pthread_mutex_unlock(&thread->mutex);
   }
