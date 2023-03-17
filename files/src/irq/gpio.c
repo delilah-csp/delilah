@@ -14,7 +14,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#define GPIO_REG_ADDR 0xB8000000
+#define GPIO_REG_ADDR 0x80000000
 #define GPIO_REG_SIZE 0x1000
 
 int fd;
@@ -63,8 +63,6 @@ handle_irq_signals(void* arg)
 {
   struct irq_thread_t* thread = arg;
   double elapsed;
-  char high[2] = { '1', '\0' };
-  char low[2] = { '0', '\0' };
 
   while (1) {
     pthread_mutex_lock(&thread->mutex);
