@@ -1,6 +1,6 @@
 #include "conf/hermes.h"
-#include "hermes/config.h"
 #include "delilah.h"
+#include "hermes/config.h"
 #include "irq/irq.h"
 #include "util/errors.h"
 #include "util/log.h"
@@ -11,27 +11,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
-#define DELILAH_GPIO_BASE_OUT 504
+#define GPIO_REG_ADDR 0xB8000000
+#define GPIO_REG_SIZE 0x1000
 
-#define GPIO_ROOT "/sys/class/gpio"
-#define GPIO_EXPORT "/sys/class/gpio/export"
-
-struct gpio_t
-{
-  int dir_fd;
-  int val_fd;
-};
-
-int export_fd;
-static struct gpio_t gpio[HERMES_UBPF_ENGINES];
+int fd;
+uint16_t* gpio_reg;
+pthread_mutex_t gpio_mutex;
 
 struct irq_thread_t
 {
   uint8_t id;
   uint8_t raised;
-  struct gpio_t* out;
   pthread_t thread_id;
   pthread_mutex_t mutex;
   pthread_cond_t cond;
@@ -47,6 +40,22 @@ delilah_irq_raise(uint8_t engine)
   threads[engine].raised = 1;
   pthread_cond_signal(&threads[engine].cond);
   pthread_mutex_unlock(&threads[engine].mutex);
+}
+
+void
+set_irq_bit(int eng)
+{
+  pthread_mutex_lock(&gpio_mutex);
+  *gpio_reg |= (1 << eng);
+  pthread_mutex_unlock(&gpio_mutex);
+}
+
+void
+clear_irq_bit(int eng)
+{
+  pthread_mutex_lock(&gpio_mutex);
+  *gpio_reg &= ~(1 << eng);
+  pthread_mutex_unlock(&gpio_mutex);
 }
 
 void*
@@ -69,24 +78,21 @@ handle_irq_signals(void* arg)
 
     struct timeval start = clock_start();
 
-    // Set GPIO high to signal IRQ to the host
-    write(thread->out->val_fd, high, 2);
-    fsync(thread->out->val_fd);
+    set_irq_bit(thread->id);
 
     // Wait for host to acknowledge IRQ
-    volatile uint8_t *ack = &thread->delilah->bar0->cmdctrl[thread->id].ehcmdack;
-    while(true)
-    {
-      if(*ack == 1) break;
+    volatile uint8_t* ack =
+      &thread->delilah->bar0->cmdctrl[thread->id].ehcmdack;
+    while (true) {
+      if (*ack == 1)
+        break;
       usleep(1);
     }
 
     // Clear the ack bit
     *ack = 0;
 
-    // Set GPIO low to signal IRQ is handled
-    write(thread->out->val_fd, low, 2);
-    fsync(thread->out->val_fd);
+    clear_irq_bit(thread->id);
 
     elapsed = clock_end(start);
     log_debug(" => (%i) IRQ %lf s", thread->id, elapsed);
@@ -98,46 +104,20 @@ handle_irq_signals(void* arg)
 return_t
 delilah_irq_configure(struct delilah_t* delilah)
 {
-  char channel_str[5];
-  char gpio_dir_file[128];
-  char gpio_val_file[128];
-  int base;
-
-  char out[4] = { 'o', 'u', 't', '\0' };
-
-  // Open the GPIO export file to export the interrupt pints to userspace
-  export_fd = open(GPIO_EXPORT, O_WRONLY | O_SYNC);
-
-  if (export_fd < 0)
+  // Synchrnously mmap the GPIO registers
+  fd = open("/dev/mem", O_RDWR | O_SYNC);
+  if (fd < 0) {
+    log_error("Failed to open /dev/mem");
     return DELILAH_ERRORS_IRQ_GPIO_FD;
+  }
 
-  // Start at the base (500) and iterate for the number of engines
+  gpio_reg = (uint16_t*)mmap(NULL, GPIO_REG_SIZE, PROT_READ | PROT_WRITE,
+                             MAP_SHARED, fd, GPIO_REG_ADDR);
+
+  pthread_mutex_init(&gpio_mutex, NULL);
+
   for (int i = 0; i < HERMES_UBPF_ENGINES; i++) {
-    base = DELILAH_GPIO_BASE_OUT + i;
-
-    // Export the GPIO to userspace
-    sprintf(channel_str, "%d", base);
-    write(export_fd, channel_str, (strlen(channel_str) + 1));
-
-    // Determine the name of the direction and value files for the GPIO
-    sprintf(gpio_dir_file, "%s/gpio%d/direction", GPIO_ROOT, base);
-    sprintf(gpio_val_file, "%s/gpio%d/value", GPIO_ROOT, base);
-
-    // Open the direction and value files for the GPIO
-    gpio[i].dir_fd = open(gpio_dir_file, O_RDWR | O_SYNC);
-    gpio[i].val_fd = open(gpio_val_file, O_WRONLY | O_SYNC);
-
-    // Check if the files were opened successfully
-    if (gpio[i].dir_fd < 0)
-      return DELILAH_ERRORS_IRQ_GPIO_FD;
-    if (gpio[i].val_fd < 0)
-      return DELILAH_ERRORS_IRQ_GPIO_FD;
-
-    // Write the direction to the GPIO (out)
-    write(gpio[i].dir_fd, out, 4);
-
     threads[i].id = i;
-    threads[i].out = &gpio[i];
     threads[i].delilah = delilah;
 
     pthread_mutex_init(&threads[i].mutex, NULL);
@@ -156,5 +136,6 @@ delilah_irq_close(struct delilah_t* delilah)
   for (int i = 0; i < HERMES_UBPF_ENGINES; i++) {
     delilah_irq_raise(i);
     pthread_join(threads[i].thread_id, NULL);
+    munmap(gpio_reg, GPIO_REG_SIZE);
   }
 }
