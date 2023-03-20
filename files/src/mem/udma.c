@@ -109,9 +109,16 @@ delilah_mem_sync_get(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
   unsigned int sync_direction = 0;
   unsigned long sync_for_cpu = 1;
 
-  // If size is 0, set it to the full buffer
+  uint32_t slot_size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+
+  // If size is 0, set it to the full buffer. Else add 0xF because of alignment.
   if (sync_size == 0)
-    size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+    sync_size = slot_size;
+  else
+    sync_size += 0xF;
+
+  if (sync_size > slot_size)
+    sync_size = slot_size;
 
   sprintf(attr, "0x%08X%08X", (sync_offset & 0xFFFFFFFF),
           (sync_size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_cpu);
@@ -131,9 +138,16 @@ delilah_mem_sync_set(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
   unsigned int sync_direction = 0;
   unsigned long sync_for_device = 1;
 
-  // If size is 0, set it to the full buffer
+  uint32_t slot_size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+
+  // If size is 0, set it to the full buffer. Else add 0xF because of alignment.
   if (sync_size == 0)
     sync_size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+  else
+    sync_size += 0xF;
+
+  if (sync_size > slot_size)
+    sync_size = slot_size;
 
   sprintf(attr, "0x%08X%08X", (sync_offset & 0xFFFFFFFF),
           (sync_size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_device);
