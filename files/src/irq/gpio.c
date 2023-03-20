@@ -14,11 +14,11 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#define GPIO_REG_ADDR 0x80000000
-#define GPIO_REG_SIZE 0x1000
+#define GPIO_REQ_ADDR 0x80000000
+#define GPIO_REQ_SIZE 0x1000
 
 int fd;
-uint16_t* gpio_reg;
+uint8_t* gpio_req;
 pthread_mutex_t gpio_mutex;
 
 struct irq_thread_t
@@ -43,18 +43,18 @@ delilah_irq_raise(uint8_t engine)
 }
 
 void
-set_irq_bit(int eng)
+set_irq_bit(uint8_t* num, int eng)
 {
   pthread_mutex_lock(&gpio_mutex);
-  *gpio_reg |= (1 << eng);
+  *num |= (1 << eng);
   pthread_mutex_unlock(&gpio_mutex);
 }
 
 void
-clear_irq_bit(int eng)
+clear_irq_bit(uint8_t* num, int eng)
 {
   pthread_mutex_lock(&gpio_mutex);
-  *gpio_reg &= ~(1 << eng);
+  *num &= ~(1 << eng);
   pthread_mutex_unlock(&gpio_mutex);
 }
 
@@ -76,21 +76,21 @@ handle_irq_signals(void* arg)
 
     struct timeval start = clock_start();
 
-    set_irq_bit(thread->id);
+    set_irq_bit(gpio_req, thread->id);
 
-    // Wait for host to acknowledge IRQ
-    volatile uint8_t* ack =
-      &thread->delilah->bar0->cmdctrl[thread->id].ehcmdack;
-    while (true) {
-      if (*ack == 1)
-        break;
-      usleep(1);
-    }
+    // See Figure 4 in PG195.
+    // The IRQ handshake requires the driver to notice two short assertions on
+    // the ACK pin before deasserting the REQ pin. This is impossible to detect
+    // reliably with the current hardware setup (GPIO cannot detect such short
+    // pulses seemingly). Alternatively, we could wait until the host has
+    // acknowledged the IRQ by updating a register in the BAR0. However, this
+    // could cause the device to hang if the host isn't responding (e.g. due to
+    // a bug in the driver, or program crashes). Therefore, we simply wait for a
+    // fixed amount of time. This is not ideal, but it should work for now.
 
-    // Clear the ack bit
-    *ack = 0;
+    usleep(10); // 10 us is enough for the PCIe driver to notice the IRQ
 
-    clear_irq_bit(thread->id);
+    clear_irq_bit(gpio_req, thread->id);
 
     elapsed = clock_end(start);
     log_debug(" => (%i) IRQ %lf s", thread->id, elapsed);
@@ -104,13 +104,14 @@ delilah_irq_configure(struct delilah_t* delilah)
 {
   // Synchrnously mmap the GPIO registers
   fd = open("/dev/mem", O_RDWR | O_SYNC);
+
   if (fd < 0) {
     log_error("Failed to open /dev/mem");
     return DELILAH_ERRORS_IRQ_GPIO_FD;
   }
 
-  gpio_reg = (uint16_t*)mmap(NULL, GPIO_REG_SIZE, PROT_READ | PROT_WRITE,
-                             MAP_SHARED, fd, GPIO_REG_ADDR);
+  gpio_req = (uint8_t*)mmap(NULL, GPIO_REQ_SIZE, PROT_READ | PROT_WRITE,
+                            MAP_SHARED, fd, GPIO_REQ_ADDR);
 
   pthread_mutex_init(&gpio_mutex, NULL);
 
@@ -134,6 +135,7 @@ delilah_irq_close(struct delilah_t* delilah)
   for (int i = 0; i < HERMES_UBPF_ENGINES; i++) {
     delilah_irq_raise(i);
     pthread_join(threads[i].thread_id, NULL);
-    munmap(gpio_reg, GPIO_REG_SIZE);
+    munmap(gpio_req, GPIO_REQ_SIZE);
+    close(fd);
   }
 }

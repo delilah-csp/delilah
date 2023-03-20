@@ -7,7 +7,6 @@
 struct delilah_cmd_ctrl {
 	uint8_t ehcmdexec;
 	uint8_t ehcmddone;
-	uint8_t ehcmdack;
 	uint8_t rsv[5];
 };
 
