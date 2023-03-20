@@ -68,10 +68,10 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
     }
 
     if ((data_fd[i] = open(buf_path, O_RDWR)) != -1) {
-      mmap_data[i] =
-        mmap(NULL, i < HERMES_PROG_SLOT_COUNT ? HERMES_PROG_SLOT_SIZE
-                                              : HERMES_DATA_SLOT_SIZE,
-             PROT_READ | PROT_WRITE, MAP_SHARED, data_fd[i], 0);
+      mmap_data[i] = mmap(NULL,
+                          i < HERMES_PROG_SLOT_COUNT ? HERMES_PROG_SLOT_SIZE
+                                                     : HERMES_DATA_SLOT_SIZE,
+                          PROT_READ | PROT_WRITE, MAP_SHARED, data_fd[i], 0);
 
       if (mmap_data[i] == NULL)
         return DELILAH_ERRORS_MEM_MMAP;
@@ -104,13 +104,17 @@ return_t
 delilah_mem_sync_get(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
 {
   unsigned char attr[1024];
-  unsigned int   sync_direction = 0;
-  unsigned long  sync_for_cpu   = 1;
-  
-  // If size is 0, set it to the full buffer
-  if (size == 0) size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+  uint32_t sync_offset = offset;
+  uint32_t sync_size = size;
+  unsigned int sync_direction = 0;
+  unsigned long sync_for_cpu = 1;
 
-  sprintf(attr, "0x%08X%08X", (offset & 0xFFFFFFFF), (size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_cpu);
+  // If size is 0, set it to the full buffer
+  if (sync_size == 0)
+    size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+
+  sprintf(attr, "0x%08X%08X", (sync_offset & 0xFFFFFFFF),
+          (sync_size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_cpu);
 
   if (write(sync_ps_fd[type == 0 ? id : (id + HERMES_PROG_SLOT_COUNT)], attr,
             strlen(attr)) <= 0) {
@@ -122,14 +126,17 @@ return_t
 delilah_mem_sync_set(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
 {
   unsigned char attr[1024];
+  uint32_t sync_offset = offset;
+  uint32_t sync_size = size;
+  unsigned int sync_direction = 0;
+  unsigned long sync_for_device = 1;
 
-  unsigned int   sync_direction = 0;
-  unsigned long  sync_for_cpu   = 0;
-  
   // If size is 0, set it to the full buffer
-  if (size == 0) size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+  if (sync_size == 0)
+    sync_size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
 
-  sprintf(attr, "0x%08X%08X", (offset & 0xFFFFFFFF), (size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_cpu);
+  sprintf(attr, "0x%08X%08X", (sync_offset & 0xFFFFFFFF),
+          (sync_size & 0xFFFFFFF0) | (sync_direction << 2) | sync_for_device);
 
   if (write(sync_pl_fd[type == 0 ? id : (id + HERMES_PROG_SLOT_COUNT)], attr,
             strlen(attr)) <= 0) {
