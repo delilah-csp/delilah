@@ -14,7 +14,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#define GPIO_REQ_ADDR 0x80000000
+#define GPIO_REQ_ADDR 0xB8000000
 #define GPIO_REQ_SIZE 0x1000
 
 int fd;
