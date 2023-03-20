@@ -57,12 +57,12 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
       sprintf(buf_path, "/dev/delilah_data%d", i - HERMES_PROG_SLOT_COUNT);
     }
 
-    if ((sync_pl_fd[i] = open(pl_path, O_WRONLY)) == -1) {
+    if ((sync_pl_fd[i] = open(pl_path, O_WRONLY | O_SYNC)) == -1) {
       log_error("Failed to open PL sync bit for buffer %d.", i);
       return DELILAH_ERRORS_UDMA_MAP;
     }
 
-    if ((sync_ps_fd[i] = open(ps_path, O_WRONLY)) == -1) {
+    if ((sync_ps_fd[i] = open(ps_path, O_WRONLY | O_SYNC)) == -1) {
       log_error("Failed to open PL sync bit for buffer %d.", i);
       return DELILAH_ERRORS_UDMA_MAP;
     }

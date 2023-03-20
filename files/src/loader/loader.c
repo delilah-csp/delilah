@@ -26,8 +26,8 @@ worker(void* p)
 
     thread->ctrl->ehcmddone = HERMES_CMD_NOT_FINISHED;
 
-    log_info("Command received for engine %i (op: %p).", thread->engine,
-             thread->cmd->req.opcode);
+//    log_info("Command received for engine %i (op: %p).", thread->engine,
+//             thread->cmd->req.opcode);
 
     for (int i = 0; i < num_cmds; i++) {
       if (commands[i].opcode == thread->cmd->req.opcode) {

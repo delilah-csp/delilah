@@ -74,7 +74,7 @@ handle_irq_signals(void* arg)
     if (thread->delilah->exiting)
       pthread_exit(NULL);
 
-    struct timeval start = clock_start();
+//    struct timeval start = clock_start();
 
     set_irq_bit(gpio_req, thread->id);
 
@@ -92,8 +92,8 @@ handle_irq_signals(void* arg)
 
     clear_irq_bit(gpio_req, thread->id);
 
-    elapsed = clock_end(start);
-    log_debug(" => (%i) IRQ %lf s", thread->id, elapsed);
+//    elapsed = clock_end(start);
+//    log_debug(" => (%i) IRQ %lf s", thread->id, elapsed);
 
     pthread_mutex_unlock(&thread->mutex);
   }
