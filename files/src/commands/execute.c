@@ -3,6 +3,7 @@
 #include "hermes/status.h"
 #include "mem/mem.h"
 #include "util/log.h"
+#include "util/ncurses.h"
 #include "util/time.h"
 #include <elf.h>
 #include <stdio.h>
@@ -31,37 +32,35 @@ delilah_command_execute(struct delilah_thread_t* thread,
   uint32_t flush_size = req->run_prog.flush_size;
   uint32_t flush_offset = req->run_prog.flush_offset;
 
-  //start = clock_start();
+  ncurses_report_engine_cache_slots(thread->engine, prog_slot, data_slot);
   delilah_mem_sync_get(0, prog_slot, prog_len, 0);
   delilah_mem_sync_get(1, data_slot, invalidation_size, invalidation_offset);
-  //invalidation = clock_end(start);
 
   elf = delilah->bar0->ehpssze >= SELFMAG &&
         !memcmp(delilah->program[prog_slot], ELFMAG, SELFMAG);
 
-  //start = clock_start();
   if (elf)
     rv = ubpf_load_elf(delilah->engine[thread->engine],
                        delilah->program[prog_slot], prog_len, &errmsg);
   else
     rv = ubpf_load(delilah->engine[thread->engine], delilah->program[prog_slot],
                    prog_len, &errmsg);
-  //loading = clock_end(start);
 
   if (rv < 0) {
-    log_warn(
-      "Load error: (isElf %i, engine id %i, rv %i, ps %i, ds %i, pl %i).", elf,
-      thread->engine, rv, prog_slot, data_slot, prog_len);
-    log_warn(" -> %s", errmsg);
+    char error[256];
+    snprintf(error, 256, "Load error: (isElf %i, engine id %i, rv %i, ps %i, "
+                         "ds %i, pl %i). -> %s",
+             elf, thread->engine, rv, prog_slot, data_slot, prog_len, errmsg);
+    ncurses_log_warn(error);
+
     res->status = HERMES_STATUS_EBPF_ERROR;
     res->cmd_specific[0] = rv;
     goto ERROR;
   }
 
-  //start = clock_start();
+  ncurses_report_engine_start(thread->engine);
   ubpf_exec(delilah->engine[thread->engine], delilah->data[data_slot],
             delilah->bar0->ehdssze, &ret);
-  //execution = clock_end(start);
 
   if (ret == UINT64_MAX)
     res->status = HERMES_STATUS_EBPF_ERROR;
@@ -70,17 +69,16 @@ delilah_command_execute(struct delilah_thread_t* thread,
 
   res->run_prog.ebpf_ret = ret;
 
-  //start = clock_start();
+  ncurses_report_engine_cache(thread->engine);
   delilah_mem_sync_set(1, data_slot, flush_size, flush_offset);
-  //flushing = clock_end(start);
 
-  //log_info("Executed program (engine id %i, ds %i, ret %i)", thread->engine,
-  //         data_slot, ret);
+  ncurses_report_engine_stopped(thread->engine, ret);
 
-  //log_debug(" => (%i) Invalidation: %lf s", thread->engine, invalidation);
-  //log_debug(" => (%i) Loading: %lf s", thread->engine, loading);
-  //log_debug(" => (%i) Execution %lf s", thread->engine, execution);
-  //log_debug(" => (%i) Flushing %lf s", thread->engine, flushing);
+  char info[256];
+  snprintf(info, 256, "Engine %i finished with return value %lu, slots %i, %i",
+           thread->engine, ret, prog_slot, data_slot);
+
+  ncurses_log_info(info);
 
 ERROR:
   ubpf_unload_code(delilah->engine[thread->engine]);

@@ -13,6 +13,7 @@ add_executable(delilah ${src})
 
 # Libraries
 target_link_libraries(delilah pthread)
+target_link_libraries(delilah ncurses)
 
 # Installation folder in Petalinux
 install(TARGETS delilah RUNTIME DESTINATION bin)

@@ -9,6 +9,7 @@
 #include "loader/loader.h"
 #include "mem/mem.h"
 #include "util/errors.h"
+#include "util/ncurses.h"
 #include "util/log.h"
 
 return_t
@@ -68,7 +69,15 @@ main(int argc, char const* argv[])
     goto FATAL_EXIT;
   }
 
-  log_info("Delilah startup successful. Listening ..");
+  ncurses_draw();
+  ncurses_init();
+  ncurses_log_info("Delilah started");
+  for (size_t i = 0; i < HERMES_UBPF_ENGINES; i++) {
+    ncurses_report_engine_ready(i);
+  }
+
+  ncurses_end();
+
   goto EXIT;
 
 FATAL_EXIT:

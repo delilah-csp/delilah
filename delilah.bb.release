@@ -25,6 +25,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/ubpf/ubpf_int.h \
            file://include/util/errors.h \
            file://include/util/log.h \
+           file://include/util/ncurses.h \
            file://include/util/time.h \
            file://include/util/units.h \
            file://src/delilah.c \
@@ -36,6 +37,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/ubpf/ubpf_loader.c \
            file://src/ubpf/ubpf_vm.c \
            file://src/util/log.c \
+           file://src/util/ncurses.c \
            file://.profile \
           "
 
