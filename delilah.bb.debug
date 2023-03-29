@@ -24,9 +24,6 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/irq/irq.h \
            file://include/loader/loader.h \
            file://include/mem/mem.h \
-           file://include/ubpf/ebpf.h \
-           file://include/ubpf/ubpf.h \
-           file://include/ubpf/ubpf_int.h \
            file://include/util/errors.h \
            file://include/util/log.h \
            file://include/util/time.h \
@@ -37,8 +34,6 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/irq/gpio.c \
            file://src/loader/loader.c \
            file://src/mem/udma.c \
-           file://src/ubpf/ubpf_loader.c \
-           file://src/ubpf/ubpf_vm.c \
            file://src/util/log.c \
            file://.profile \
           "

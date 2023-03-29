@@ -5,7 +5,7 @@ typedef int return_t;
 
 #include "conf/hermes.h"
 #include "loader/loader.h"
-#include "ubpf/ubpf.h"
+#include <ubpf.h>
 
 struct delilah_slots_t
 {
