@@ -26,6 +26,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/util/units.h \
            file://src/delilah.c \
            file://src/commands/execute.c \
+           file://src/commands/execute_jit.c \
            file://src/hermes/configure.c \
            file://src/irq/gpio.c \
            file://src/loader/loader.c \
