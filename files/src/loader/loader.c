@@ -83,6 +83,16 @@ delilah_loader_start(struct delilah_t* delilah)
 
     pthread_create(&delilah->threads[i].thread_id, NULL, worker,
                    &delilah->threads[i]);
+
+    // Set CPU affinity
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(i, &cpuset);
+    int rc = pthread_setaffinity_np(delilah->threads[i].thread_id,
+                                    sizeof(cpu_set_t), &cpuset);
+    if (rc != 0) {
+      log_warn("Error calling pthread_setaffinity_np %d on engine %i", rc, i);
+    }
   }
 
   return 0x0;
