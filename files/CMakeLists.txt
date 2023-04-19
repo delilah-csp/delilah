@@ -14,6 +14,9 @@ add_subdirectory(ubpf)
 FILE(GLOB_RECURSE src src/*.c)
 add_executable(delilah ${src})
 
+# Add _GNU_SOURCE flag
+target_compile_definitions(delilah PRIVATE _GNU_SOURCE)
+
 # Libraries
 target_link_libraries(delilah pthread)
 target_link_libraries(delilah ubpf)
