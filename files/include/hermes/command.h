@@ -28,6 +28,15 @@ struct hermes_cmd_req
       volatile uint32_t flush_offset;
     } run_prog;
 
+    struct
+    {
+      volatile uint8_t src;
+      volatile uint32_t dst;
+      volatile uint32_t len;
+      volatile uint32_t src_offset;
+      volatile uint32_t dst_offset;
+    } clone;
+
     volatile uint8_t cmd_specific[24];
   };
 };

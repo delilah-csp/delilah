@@ -19,10 +19,12 @@ struct command_t
 
 handler_t delilah_command_execute;
 handler_t delilah_command_execute_jit;
+handler_t delilah_command_clone;
 
 static struct command_t commands[] = {
   { HERMES_OPCODE_EXECUTE_SLOT, &delilah_command_execute },
-  { HERMES_OPCODE_EXECUTE_SLOT_JIT, &delilah_command_execute_jit }
+  { HERMES_OPCODE_EXECUTE_SLOT_JIT, &delilah_command_execute_jit },
+  { DELILAH_OPCODE_CLONE, &delilah_command_clone }
 };
 
 #endif

@@ -14,4 +14,6 @@ return_t delilah_mem_sync_set(uint8_t type, uint8_t id, uint32_t size, uint32_t 
 return_t delilah_mem_unalloc_bar();
 return_t delilah_mem_unalloc_data();
 
+return_t delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_offset, uint32_t dst_offset);
+
 #endif

@@ -176,3 +176,26 @@ delilah_mem_unalloc_data()
                                                     : HERMES_DATA_SLOT_SIZE);
   }
 }
+
+return_t delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_offset, uint32_t dst_offset){
+  uint32_t slot_size = HERMES_DATA_SLOT_SIZE;
+  uint32_t copy_size = size;
+  uint32_t copy_src_offset = src_offset;
+  uint32_t copy_dst_offset = dst_offset;
+
+  if (copy_size == 0)
+    copy_size = slot_size;
+
+  if (copy_size > slot_size)
+    copy_size = slot_size;
+
+  if (copy_src_offset + copy_size > slot_size)
+    copy_size = slot_size - copy_src_offset;
+
+  if (copy_dst_offset + copy_size > slot_size)
+    copy_size = slot_size - copy_dst_offset;
+
+  memcpy(mmap_data[HERMES_PROG_SLOT_COUNT + dst] + copy_dst_offset, mmap_data[HERMES_PROG_SLOT_COUNT + src] + copy_src_offset, size);
+
+  return 0;
+}
