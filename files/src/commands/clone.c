@@ -40,7 +40,7 @@ delilah_command_clone(struct delilah_thread_t* thread,
             return -1;
         }
 
-        log_info("cloning from %d to %d, size %d, src_offset %d, dst_offset %d", src_slot, i, size, src_offset, dst_offset);
+        log_debug("cloning from %d to %d, size %d, src_offset %d, dst_offset %d", src_slot, i, size, src_offset, dst_offset);
 
         delilah_mem_sync_get(1, i, size, dst_offset); // Must take token before copy
         delilah_mem_copy(src_slot, i, size, src_offset, dst_offset);

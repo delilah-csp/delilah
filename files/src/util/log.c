@@ -150,6 +150,8 @@ init_event(log_Event* ev, void* udata)
 void
 log_log(int level, const char* file, int line, const char* fmt, ...)
 {
+  if(level <= LOG_DEBUG && IGNORE_DEBUG) return;
+
   log_Event ev = {
     .fmt = fmt, .file = file, .line = line, .level = level,
   };

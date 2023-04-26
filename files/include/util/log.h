@@ -15,6 +15,8 @@
 
 #define LOG_VERSION "0.1.0"
 
+static short IGNORE_DEBUG = 1;
+
 typedef struct
 {
   va_list ap;

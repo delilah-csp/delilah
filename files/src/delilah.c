@@ -41,6 +41,11 @@ main(int argc, char const* argv[])
   log_info("Starting Delilah v%i.%i.%i.", DELILAH_VERSION_MAJOR,
            DELILAH_VERSION_MINOR, DELILAH_VERSION_BUILD);
 
+  if (argc > 1 && strcmp(argv[1], "--debug") == 0) {
+    IGNORE_DEBUG = 0;
+    log_debug("Debug mode enabled.");
+  }
+
   struct delilah_t* delilah = malloc(sizeof(struct delilah_t));
 
   if ((delilah->rv = delilah_alloc(delilah)) > 0) {
