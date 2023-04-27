@@ -13,9 +13,11 @@
 
 static void* mmap_bar;
 static void* mmap_data[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
+static void* mmap_shared;
 
 static int bar_fd;
 static int data_fd[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
+static int shared_fd;
 
 static int sync_ps_fd[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
 static int sync_pl_fd[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
@@ -88,6 +90,22 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
   return 0x0;
 }
 
+return_t delilah_mem_alloc_shared(struct delilah_t* delilah){
+  if ((shared_fd = open("/dev/delilah_shared0", O_RDWR)) != -1) {
+    mmap_shared = mmap(NULL, DELILAH_SHARED_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
+                    shared_fd, 0);
+
+    if (mmap_shared == NULL)
+      return DELILAH_ERRORS_MEM_MMAP;
+
+    delilah->shared = mmap_shared;
+
+    return 0x0;
+  }
+
+  return DELILAH_ERRORS_MEM_DEV;
+}
+
 void*
 delilah_mem_get_bar()
 {
@@ -98,6 +116,11 @@ void*
 delilah_mem_get_data()
 {
   return mmap_data;
+}
+
+void *
+delilah_mem_get_shared(){
+  return mmap_shared;
 }
 
 return_t
@@ -175,6 +198,13 @@ delilah_mem_unalloc_data()
     munmap(mmap_data[i], i < HERMES_PROG_SLOT_COUNT ? HERMES_PROG_SLOT_SIZE
                                                     : HERMES_DATA_SLOT_SIZE);
   }
+}
+
+return_t
+delilah_mem_unalloc_shared()
+{
+  close(shared_fd);
+  munmap(mmap_shared, DELILAH_SHARED_SIZE);
 }
 
 return_t delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_offset, uint32_t dst_offset){

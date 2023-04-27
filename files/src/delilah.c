@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "conf/conf.h"
 #include "conf/hermes.h"
@@ -28,7 +29,15 @@ delilah_alloc(struct delilah_t* delilah)
 
   if (rv > 0) {
     log_fatal("Unable to allocate memory.");
-    log_fatal(" => DATA: phys %p, size %ld, log %p", rv);
+    log_fatal(" => DATA: log %p", rv);
+    return rv;
+  }
+
+  rv = delilah_mem_alloc_shared(delilah);
+
+  if (rv > 0) {
+    log_fatal("Unable to allocate shared memory.");
+    log_fatal(" => SHR: log %p", rv);
     return rv;
   }
 
@@ -84,6 +93,7 @@ EXIT:
   delilah_irq_close(delilah);
   delilah_mem_unalloc_data(delilah);
   delilah_mem_unalloc_bar(delilah);
+  delilah_mem_alloc_shared(delilah);
 
   log_info("Exiting ..");
 

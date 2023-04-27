@@ -60,7 +60,7 @@ delilah_command_execute(struct delilah_thread_t* thread,
 
   start = clock_start();
   ubpf_exec(delilah->engine[thread->engine], delilah->data[data_slot],
-            delilah->bar0->ehdssze, &ret);
+            delilah->bar0->ehdssze, &ret, delilah->shared, DELILAH_SHARED_SIZE);
   execution = clock_end(start);
 
   if (ret == UINT64_MAX)
