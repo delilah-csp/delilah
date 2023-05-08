@@ -15,64 +15,72 @@ typedef void (*memory_op)(volatile char*, size_t);
 static void
 seq_read(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[i % size];
+    memory[i & mask];
   }
 }
 
 static void
 seq_write(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[i % size] = 42;
+    memory[i & mask] = 42;
   }
 }
 
 static void
 rand_read(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[rand() % size];
+    memory[rand() & mask];
   }
 }
 
 static void
 rand_write(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[rand() % size] = 42;
+    memory[rand() & mask] = 42;
   }
 }
 
 static void
 seq_read_aligned(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[(i % size) & ~(0xF)];
+    memory[(i & mask) & ~(0xF)]; // 16 byte alignment
   }
 }
 
 static void
 seq_write_aligned(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[(i % size) & ~(0xF)] = 42;
+    memory[(i & mask) & ~(0xF)] = 42; // 16 byte alignment
   }
 }
 
 static void
 rand_read_aligned(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[(rand() % size) & ~(0xF)];
+    memory[(rand() & mask) & ~(0xF)]; // 16 byte alignment
   }
 }
 
 static void
 rand_write_aligned(volatile char* memory, size_t size)
 {
+  const size_t mask = size - 1;
   for (size_t i = 0; i < TEST_SIZE; i++) {
-    memory[(rand() % size) & ~(0xF)] = 42;
+    memory[(rand() & mask) & ~(0xF)] = 42; // 16 byte alignment
   }
 }
 
@@ -112,6 +120,22 @@ delilah_functions_debug_bench(void* ctx, size_t mem_size, void* shared,
     printf(
       "Random number generation\n --> %f s in total\n --> %f ns per call\n\n",
       elapsed, rand_elapsed_one);
+  }
+
+  // check if local memory is allocated and if it is a power of 2
+  if (local_memory_size <= 0 || local_memory == NULL || (local_memory_size & (local_memory_size - 1)) != 0) {
+    printf("Local memory size must be a power of 2 and greater than 0\n");
+    return;
+  }
+
+  if(mem_size <= 0 || mem_size == NULL || (mem_size & (mem_size - 1)) != 0) {
+    printf("Memory size must be a power of 2 and greater than 0\n");
+    return;
+  }
+
+  if(shared_size <= 0 || shared_size == NULL || (shared_size & (shared_size - 1)) != 0) {
+    printf("Shared memory size must be a power of 2 and greater than 0\n");
+    return;
   }
 
   printf("Local Memory\n");
