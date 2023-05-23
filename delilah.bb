@@ -13,6 +13,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/functions/file.h \
            file://include/functions/fs.h \
            file://include/functions/index.h \
+           file://include/functions/tsl.h \
            file://include/functions/version.h \
            file://include/hermes/command.h \
            file://include/hermes/config.h \
@@ -30,11 +31,13 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/commands/clone.c \
            file://src/commands/execute.c \
            file://src/commands/execute_jit.c \
+           file://src/functions/tsl.cpp \
            file://src/hermes/configure.c \
            file://src/irq/gpio.c \
            file://src/loader/loader.c \
            file://src/mem/udma.c \
            file://src/util/log.c \
+           file://tsl/* \
            file://ubpf/* \
            file://.profile \
           "

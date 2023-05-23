@@ -5,6 +5,7 @@
 #include "functions/debug.h"
 #include "functions/file.h"
 #include "functions/fs.h"
+#include "functions/tsl.hpp"
 #include "functions/version.h"
 
 struct ext_func
@@ -43,7 +44,11 @@ static struct ext_func registered_functions[] = {
   { .idx = 33, .name = "delilah_cpu_prefetch_wl2", &delilah_functions_cpu_prefetch_wl2 },
 
   /* Debug Module */
-  { .idx = 40, .name = "delilah_debug_bench", &delilah_functions_debug_bench }
+  { .idx = 40, .name = "delilah_debug_bench", &delilah_functions_debug_bench },
+
+  /* TSL Module */
+  { .idx = 50, .name = "delilah_tsl_test", &delilah_functions_tsl_test },
+  { .idx = 51, .name = "delilah_tsl_filter_neon", &delilah_functions_tsl_filter_neon }
 };
 
 #endif
