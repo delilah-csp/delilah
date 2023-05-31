@@ -3,7 +3,12 @@
 
 #include <stdint.h>
 
-void delilah_functions_tsl_test();
-uint32_t delilah_functions_tsl_filter_neon(uint32_t* data, uint32_t len, uint32_t pred0, uint32_t pred1);
+uint32_t delilah_functions_tsl_filter_neon(uint32_t* data, size_t len,
+                                           uint32_t* out, uint32_t _c_pred1,
+                                           uint32_t _c_pred2);
+uint32_t delilah_functions_tsl_filter_sequential(uint32_t* data, size_t len,
+                                                 uint32_t* out,
+                                                 uint32_t _c_pred1,
+                                                 uint32_t _c_pred2);
 
 #endif

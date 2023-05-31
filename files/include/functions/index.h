@@ -5,7 +5,7 @@
 #include "functions/debug.h"
 #include "functions/file.h"
 #include "functions/fs.h"
-#include "functions/tsl.hpp"
+#include "functions/tsl.h"
 #include "functions/version.h"
 
 struct ext_func
@@ -38,17 +38,29 @@ static struct ext_func registered_functions[] = {
   { .idx = 21, .name = "delilah_fs_unmount", &delilah_functions_fs_unmount },
 
   /* CPU Module */
-  { .idx = 30, .name = "delilah_cpu_prefetch_rl1", &delilah_functions_cpu_prefetch_rl1 },
-  { .idx = 31, .name = "delilah_cpu_prefetch_rl2", &delilah_functions_cpu_prefetch_rl2 },
-  { .idx = 32, .name = "delilah_cpu_prefetch_wl1", &delilah_functions_cpu_prefetch_wl1 },
-  { .idx = 33, .name = "delilah_cpu_prefetch_wl2", &delilah_functions_cpu_prefetch_wl2 },
+  { .idx = 30,
+    .name = "delilah_cpu_prefetch_rl1",
+    &delilah_functions_cpu_prefetch_rl1 },
+  { .idx = 31,
+    .name = "delilah_cpu_prefetch_rl2",
+    &delilah_functions_cpu_prefetch_rl2 },
+  { .idx = 32,
+    .name = "delilah_cpu_prefetch_wl1",
+    &delilah_functions_cpu_prefetch_wl1 },
+  { .idx = 33,
+    .name = "delilah_cpu_prefetch_wl2",
+    &delilah_functions_cpu_prefetch_wl2 },
 
   /* Debug Module */
   { .idx = 40, .name = "delilah_debug_bench", &delilah_functions_debug_bench },
 
   /* TSL Module */
-  { .idx = 50, .name = "delilah_tsl_test", &delilah_functions_tsl_test },
-  { .idx = 51, .name = "delilah_tsl_filter_neon", &delilah_functions_tsl_filter_neon }
+  { .idx = 50,
+    .name = "delilah_tsl_filter_sequential",
+    &delilah_functions_tsl_filter_sequential },
+  { .idx = 51,
+    .name = "delilah_tsl_filter_neon",
+    &delilah_functions_tsl_filter_neon }
 };
 
 #endif
