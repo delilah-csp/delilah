@@ -60,7 +60,13 @@ static struct ext_func registered_functions[] = {
     &delilah_functions_tsl_filter_sequential },
   { .idx = 51,
     .name = "delilah_tsl_filter_neon",
-    &delilah_functions_tsl_filter_neon }
+    &delilah_functions_tsl_filter_neon },
+  { .idx = 52,
+    .name = "delilah_tsl_filter_between_neon",
+    &delilah_functions_tsl_filter_between_neon },
+  { .idx = 53,
+    .name = "delilah_tsl_filter_equal_neon",
+    &delilah_functions_tsl_filter_equal_neon }
 };
 
 #endif
