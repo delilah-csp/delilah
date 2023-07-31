@@ -31,6 +31,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/util/time.h \
            file://include/util/units.h \
            file://src/delilah.c \
+           file://src/commands/clear_cache.c \
            file://src/commands/clone.c \
            file://src/commands/execute.c \
            file://src/commands/execute_jit.c \
