@@ -90,10 +90,12 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
   return 0x0;
 }
 
-return_t delilah_mem_alloc_shared(struct delilah_t* delilah){
+return_t
+delilah_mem_alloc_shared(struct delilah_t* delilah)
+{
   if ((shared_fd = open("/dev/delilah_shared0", O_RDWR)) != -1) {
-    mmap_shared = mmap(NULL, DELILAH_SHARED_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED,
-                    shared_fd, 0);
+    mmap_shared = mmap(NULL, DELILAH_SHARED_SIZE, PROT_READ | PROT_WRITE,
+                       MAP_SHARED, shared_fd, 0);
 
     if (mmap_shared == NULL)
       return DELILAH_ERRORS_MEM_MMAP;
@@ -118,8 +120,9 @@ delilah_mem_get_data()
   return mmap_data;
 }
 
-void *
-delilah_mem_get_shared(){
+void*
+delilah_mem_get_shared()
+{
   return mmap_shared;
 }
 
@@ -132,7 +135,8 @@ delilah_mem_sync_get(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
   unsigned int sync_direction = 0;
   unsigned long sync_for_cpu = 1;
 
-  uint32_t slot_size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+  uint32_t slot_size =
+    type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
 
   // If size is 0, set it to the full buffer. Else add 0xF because of alignment.
   if (sync_size == 0)
@@ -161,7 +165,8 @@ delilah_mem_sync_set(uint8_t type, uint8_t id, uint32_t size, uint32_t offset)
   unsigned int sync_direction = 0;
   unsigned long sync_for_device = 1;
 
-  uint32_t slot_size = type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
+  uint32_t slot_size =
+    type == 0 ? HERMES_PROG_SLOT_SIZE : HERMES_DATA_SLOT_SIZE;
 
   // If size is 0, set it to the full buffer. Else add 0xF because of alignment.
   if (sync_size == 0)
@@ -207,7 +212,10 @@ delilah_mem_unalloc_shared()
   munmap(mmap_shared, DELILAH_SHARED_SIZE);
 }
 
-return_t delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_offset, uint32_t dst_offset){
+return_t
+delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_offset,
+                 uint32_t dst_offset)
+{
   uint32_t slot_size = HERMES_DATA_SLOT_SIZE;
   uint32_t copy_size = size;
   uint32_t copy_src_offset = src_offset;
@@ -225,7 +233,8 @@ return_t delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_
   if (copy_dst_offset + copy_size > slot_size)
     copy_size = slot_size - copy_dst_offset;
 
-  memcpy(mmap_data[HERMES_PROG_SLOT_COUNT + dst] + copy_dst_offset, mmap_data[HERMES_PROG_SLOT_COUNT + src] + copy_src_offset, size);
+  memcpy(mmap_data[HERMES_PROG_SLOT_COUNT + dst] + copy_dst_offset,
+         mmap_data[HERMES_PROG_SLOT_COUNT + src] + copy_src_offset, size);
 
   return 0;
 }

@@ -4,10 +4,11 @@
 #include "conf/hermes.h"
 #include "hermes/command.h"
 
-struct delilah_cmd_ctrl {
-	uint8_t ehcmdexec;
-	uint8_t ehcmddone;
-	uint8_t rsv[5];
+struct delilah_cmd_ctrl
+{
+  uint8_t ehcmdexec;
+  uint8_t ehcmddone;
+  uint8_t rsv[5];
 };
 
 struct delilah_bar0

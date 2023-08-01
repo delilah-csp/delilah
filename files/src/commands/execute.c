@@ -75,7 +75,7 @@ delilah_command_execute(struct delilah_thread_t* thread,
   flushing = clock_end(start);
 
   log_debug("Executed program (engine id %i, ds %i, ret %i)", thread->engine,
-           data_slot, ret);
+            data_slot, ret);
 
   log_debug(" => (%i) Invalidation: %lf s", thread->engine, invalidation);
   log_debug(" => (%i) Loading: %lf s", thread->engine, loading);

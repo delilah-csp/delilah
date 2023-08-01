@@ -71,7 +71,8 @@ delilah_command_execute_jit(struct delilah_thread_t* thread,
     goto ERROR;
   }
 
-  ret = jit(delilah->data[data_slot], HERMES_DATA_SLOT_SIZE, delilah->shared, DELILAH_SHARED_SIZE);
+  ret = jit(delilah->data[data_slot], HERMES_DATA_SLOT_SIZE, delilah->shared,
+            DELILAH_SHARED_SIZE);
   execution = clock_end(start);
 
   if (ret == UINT64_MAX)

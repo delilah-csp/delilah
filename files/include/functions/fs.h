@@ -15,7 +15,8 @@
 #define DELILAH_FUNCTIONS_FS_UNMOUNT_FAILED 0x4
 
 static uint8_t
-delilah_functions_fs_mount(const char* nvme_handle, const char* mount_point, const char* fs_type)
+delilah_functions_fs_mount(const char* nvme_handle, const char* mount_point,
+                           const char* fs_type)
 {
   // Construct the device path using the provided NVME handle
   char nvme_device_path[50];

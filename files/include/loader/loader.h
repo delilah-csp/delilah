@@ -2,8 +2,8 @@
 #define DELILAH_LOADER_LOADER
 
 #include "delilah.h"
-#include <sched.h>
 #include <pthread.h>
+#include <sched.h>
 
 struct delilah_thread_t
 {
