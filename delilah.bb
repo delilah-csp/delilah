@@ -8,10 +8,8 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/conf/conf.h \
            file://include/conf/hermes.h \
            file://include/conf/version.h \
-           file://include/functions/cpu.h \
            file://include/functions/debug.h \
            file://include/functions/file.h \
-           file://include/functions/fs.h \
            file://include/functions/index.h \
            file://include/functions/version.h \
            file://include/hermes/command.h \
