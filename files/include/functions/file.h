@@ -3,6 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <string.h>
+#include "util/log.h"
 
 static size_t
 delilah_functions_file_read(void* buffer, size_t size, char* filename)
@@ -56,6 +61,55 @@ delilah_functions_file_read_offset(void* buffer, size_t size, size_t offset,
 
   buf[result] = 0;
   return result;
+}
+
+static size_t
+delilah_functions_file_direct_read(void* buffer, size_t size,
+                                   const char* filename)
+{
+  int fd = open(filename, O_RDONLY | O_DIRECT);
+  if (fd == -1) {
+    char* error = strerror(errno);
+    log_warn("Failed to open %s: %s\n", filename, error);
+    return 0;
+  }
+
+  ssize_t bytes_read = read(fd, buffer, size);
+  if (bytes_read == -1) {
+    char* error = strerror(errno);
+    log_warn("Failed to read %s: %s\n", filename, error);
+    close(fd);
+    return 0;
+  }
+
+  close(fd);
+  return bytes_read;
+}
+
+static size_t
+delilah_functions_file_direct_read_offset(void* buffer, size_t size,
+                                          size_t offset, const char* filename)
+{
+  int fd = open(filename, O_RDONLY | O_DIRECT);
+  if (fd == -1) {
+    char* error = strerror(errno);
+    log_warn("Failed to open %s: %s\n", filename, error);
+    return 0;
+  }
+
+  off_t file_size = lseek(fd, 0, SEEK_END);
+  off_t new_offset = (offset < file_size) ? offset : file_size;
+
+  ssize_t bytes_read = pread(fd, buffer, size, new_offset);
+  if (bytes_read == -1) {
+    char* error = strerror(errno);
+    log_warn("Failed to read %s: %s\n", filename, error);
+    close(fd);
+    return 0;
+  }
+
+  close(fd);
+  return bytes_read;
 }
 
 #endif
