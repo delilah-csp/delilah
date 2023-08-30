@@ -35,6 +35,12 @@ static struct ext_func registered_functions[] = {
   { .idx = 13,
     .name = "delilah_file_direct_read_offset",
     &delilah_functions_file_direct_read_offset },
+  { .idx = 14,
+    .name = "delilah_file_indirect_read",
+    &delilah_functions_file_indirect_read },
+  { .idx = 15,
+    .name = "delilah_file_indirect_read_offset",
+    &delilah_functions_file_indirect_read_offset },
 
   /* Debug Module */
   { .idx = 20, .name = "delilah_debug_bench", &delilah_functions_debug_bench }
