@@ -93,19 +93,9 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
 return_t
 delilah_mem_alloc_shared(struct delilah_t* delilah)
 {
-  if ((shared_fd = open("/dev/delilah_shared0", O_RDWR)) != -1) {
-    mmap_shared = mmap(NULL, DELILAH_SHARED_SIZE, PROT_READ | PROT_WRITE,
-                       MAP_SHARED, shared_fd, 0);
-
-    if (mmap_shared == NULL)
-      return DELILAH_ERRORS_MEM_MMAP;
-
-    delilah->shared = mmap_shared;
-
-    return 0x0;
-  }
-
-  return DELILAH_ERRORS_MEM_DEV;
+  delilah->shared = malloc(1024 * 1024 * 128);
+  mmap_shared = delilah->shared;
+  return 0x0;
 }
 
 void*
@@ -208,8 +198,7 @@ delilah_mem_unalloc_data()
 return_t
 delilah_mem_unalloc_shared()
 {
-  close(shared_fd);
-  munmap(mmap_shared, DELILAH_SHARED_SIZE);
+  free(mmap_shared);
 }
 
 return_t
