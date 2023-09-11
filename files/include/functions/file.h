@@ -71,6 +71,7 @@ delilah_functions_file_indirect_read(void* buffer, size_t size,
   void* align = aligned_alloc(4096, size);
   size_t br = _delilah_functions_file_read(align, size, 0, filename, O_DIRECT);
   if (copy) memcpy(buffer, align, size);
+  free(align);
   return br;
 }
 
@@ -81,6 +82,7 @@ delilah_functions_file_indirect_read_offset(void* buffer, size_t size,
   void* align = aligned_alloc(4096, size);
   size_t br = _delilah_functions_file_read(align, size, offset, filename, O_DIRECT);
   if (copy) memcpy(buffer, align, size);
+  free(align);
   return br;
 }
 
