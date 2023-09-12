@@ -67,7 +67,7 @@ delilah_command_execute_jit(struct delilah_thread_t* thread,
       "JIT failure: (isElf %i, engine id %i, rv %i, ps %i, ds %i, pl %i).", elf,
       thread->engine, rv, prog_slot, data_slot, prog_len);
     log_warn(" -> %s", errmsg);
-    res->status = HERMES_STATUS_JIT_ERROR;
+    res->status = HERMES_STATUS_INVALID_ARGUMENT;
     goto ERROR;
   }
 
