@@ -31,6 +31,8 @@ delilah_command_execute(struct delilah_thread_t* thread,
   uint32_t flush_size = req->run_prog.flush_size;
   uint32_t flush_offset = req->run_prog.flush_offset;
 
+  thread_meta = 0;
+
   start = clock_start();
   delilah_mem_sync_get(0, prog_slot, prog_len, 0);
   delilah_mem_sync_get(1, data_slot, invalidation_size, invalidation_offset);
@@ -73,6 +75,8 @@ delilah_command_execute(struct delilah_thread_t* thread,
   start = clock_start();
   delilah_mem_sync_set(1, data_slot, flush_size, flush_offset);
   flushing = clock_end(start);
+
+  res->status = res->status | thread_meta;
 
   log_debug("Executed program (engine id %i, ds %i, ret %i)", thread->engine,
             data_slot, ret);
