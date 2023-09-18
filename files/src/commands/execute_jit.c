@@ -1,6 +1,7 @@
 #include "commands/commands.h"
 #include "hermes/config.h"
 #include "hermes/status.h"
+#include "loader/loader.h"
 #include "mem/mem.h"
 #include "util/log.h"
 #include "util/time.h"
@@ -32,7 +33,7 @@ delilah_command_execute_jit(struct delilah_thread_t* thread,
   uint32_t flush_size = req->run_prog.flush_size;
   uint32_t flush_offset = req->run_prog.flush_offset;
 
-  thread_meta = 0;
+  res->status = HERMES_STATUS_SUCCESS;
 
   start = clock_start();
   delilah_mem_sync_get(0, prog_slot, prog_len, 0);
@@ -77,21 +78,14 @@ delilah_command_execute_jit(struct delilah_thread_t* thread,
             DELILAH_SHARED_SIZE);
   execution = clock_end(start);
 
-  if (ret == UINT64_MAX)
-    res->status = HERMES_STATUS_EBPF_ERROR;
-  else
-    res->status = HERMES_STATUS_SUCCESS;
-
-  res->run_prog.ebpf_ret = ret;
-
   start = clock_start();
   delilah_mem_sync_set(1, data_slot, flush_size, flush_offset);
   flushing = clock_end(start);
 
-  res->status = res->status |thread_meta;
+  res->status = res->status | (ret << 2);
 
   log_debug("Executed program (engine id %i, ds %i, ret %i)", thread->engine,
-            data_slot, ret);
+            data_slot, res->status);
 
   log_debug(" => (%i) Invalidation: %lf s", thread->engine, invalidation);
   log_debug(" => (%i) Loading: %lf s", thread->engine, loading);

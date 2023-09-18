@@ -35,15 +35,10 @@ struct hermes_cmd_req
 struct hermes_cmd_res
 {
   volatile uint16_t cid;
-  volatile uint8_t status;
+  volatile uint32_t status;
   uint8_t rsv0[5];
   union
   {
-    struct
-    {
-      volatile uint64_t ebpf_ret;
-    } run_prog;
-
     volatile uint8_t cmd_specific[8];
   };
 };

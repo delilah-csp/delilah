@@ -16,8 +16,6 @@ struct delilah_thread_t
   struct delilah_cmd_ctrl* ctrl;
 };
 
-static __thread uint32_t thread_meta;
-
 return_t delilah_loader_configure(struct delilah_t* delilah);
 return_t delilah_loader_unload(struct delilah_t* delilah);
 return_t delilah_loader_start(struct delilah_t* delilah);
