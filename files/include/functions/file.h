@@ -40,28 +40,28 @@ _delilah_functions_file_read(void* buffer, size_t size, size_t offset,
 static size_t
 delilah_functions_file_read(void* buffer, size_t size, char* filename)
 {
-  _delilah_functions_file_read(buffer, size, 0, filename, 0);
+  return _delilah_functions_file_read(buffer, size, 0, filename, 0);
 }
 
 static size_t
 delilah_functions_file_read_offset(void* buffer, size_t size, size_t offset,
                                    char* filename)
 {
-  _delilah_functions_file_read(buffer, size, offset, filename, 0);
+  return _delilah_functions_file_read(buffer, size, offset, filename, 0);
 }
 
 static size_t
 delilah_functions_file_direct_read(void* buffer, size_t size,
                                    const char* filename)
 {
-  _delilah_functions_file_read(buffer, size, 0, filename, O_DIRECT);
+  return _delilah_functions_file_read(buffer, size, 0, filename, O_DIRECT);
 }
 
 static size_t
 delilah_functions_file_direct_read_offset(void* buffer, size_t size,
                                           size_t offset, const char* filename)
 {
-  _delilah_functions_file_read(buffer, size, offset, filename, O_DIRECT);
+  return _delilah_functions_file_read(buffer, size, offset, filename, O_DIRECT);
 }
 
 static size_t
