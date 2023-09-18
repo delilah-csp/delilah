@@ -15,7 +15,7 @@
 
 #define LOG_VERSION "0.1.0"
 
-static short IGNORE_DEBUG = 1;
+extern short IGNORE_DEBUG;
 
 typedef struct
 {

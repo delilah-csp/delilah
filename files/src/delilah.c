@@ -12,6 +12,8 @@
 #include "util/errors.h"
 #include "util/log.h"
 
+short IGNORE_DEBUG = 1;
+
 return_t
 delilah_alloc(struct delilah_t* delilah)
 {
