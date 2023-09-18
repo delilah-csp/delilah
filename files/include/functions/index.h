@@ -3,7 +3,6 @@
 
 #include "functions/debug.h"
 #include "functions/file.h"
-#include "functions/meta.h"
 #include "functions/version.h"
 
 struct ext_func
@@ -45,10 +44,6 @@ static struct ext_func registered_functions[] = {
 
   /* Debug Module */
   { .idx = 20, .name = "delilah_debug_bench", &delilah_functions_debug_bench },
-
-  /* Meta Module */
-  { .idx = 30, .name = "delilah_meta_get", &delilah_functions_meta_get },
-  { .idx = 31, .name = "delilah_meta_set", &delilah_functions_meta_set }
 };
 
 #endif

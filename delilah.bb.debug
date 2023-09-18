@@ -15,7 +15,6 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/functions/debug.h \
            file://include/functions/file.h \
            file://include/functions/index.h \
-           file://include/functions/meta.h \
            file://include/functions/version.h \
            file://include/hermes/command.h \
            file://include/hermes/config.h \
