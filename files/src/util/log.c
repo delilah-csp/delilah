@@ -154,10 +154,7 @@ log_log(int level, const char* file, int line, const char* fmt, ...)
     return;
 
   log_Event ev = {
-    .fmt = fmt,
-    .file = file,
-    .line = line,
-    .level = level,
+    .fmt = fmt, .file = file, .line = line, .level = level,
   };
 
   lock();

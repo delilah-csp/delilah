@@ -1,17 +1,17 @@
 #ifndef DELILAH_FUNCTIONS_FILE
 #define DELILAH_FUNCTIONS_FILE
 
+#include "util/log.h"
+#include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
 #include <string.h>
-#include "util/log.h"
+#include <sys/stat.h>
 
 static size_t
 _delilah_functions_file_read(void* buffer, size_t size, size_t offset,
-                                   char* filename, int flags)
+                             char* filename, int flags)
 {
   int fd = open(filename, O_RDONLY | flags);
   if (fd == -1) {
@@ -33,9 +33,7 @@ _delilah_functions_file_read(void* buffer, size_t size, size_t offset,
 
   close(fd);
   return bytes_read;
-
 }
-
 
 static size_t
 delilah_functions_file_read(void* buffer, size_t size, char* filename)
@@ -66,25 +64,28 @@ delilah_functions_file_direct_read_offset(void* buffer, size_t size,
 
 static size_t
 delilah_functions_file_indirect_read(void* buffer, size_t size,
-                                   const char* filename, int copy)
+                                     const char* filename, int copy)
 {
   void* align = aligned_alloc(4096, size);
   size_t br = _delilah_functions_file_read(align, size, 0, filename, O_DIRECT);
-  if (copy) memcpy(buffer, align, size);
+  if (copy)
+    memcpy(buffer, align, size);
   free(align);
   return br;
 }
 
 static size_t
 delilah_functions_file_indirect_read_offset(void* buffer, size_t size,
-                                          size_t offset, const char* filename, int copy)
+                                            size_t offset, const char* filename,
+                                            int copy)
 {
   void* align = aligned_alloc(4096, size);
-  size_t br = _delilah_functions_file_read(align, size, offset, filename, O_DIRECT);
-  if (copy) memcpy(buffer, align, size);
+  size_t br =
+    _delilah_functions_file_read(align, size, offset, filename, O_DIRECT);
+  if (copy)
+    memcpy(buffer, align, size);
   free(align);
   return br;
 }
-
 
 #endif

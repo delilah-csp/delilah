@@ -13,11 +13,10 @@
 
 static void* mmap_bar;
 static void* mmap_data[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
-static void* mmap_shared;
+static void* malloc_shared;
 
 static int bar_fd;
 static int data_fd[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
-static int shared_fd;
 
 static int sync_ps_fd[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
 static int sync_pl_fd[HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT];
@@ -70,10 +69,10 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
     }
 
     if ((data_fd[i] = open(buf_path, O_RDWR)) != -1) {
-      mmap_data[i] = mmap(NULL,
-                          i < HERMES_PROG_SLOT_COUNT ? HERMES_PROG_SLOT_SIZE
-                                                     : HERMES_DATA_SLOT_SIZE,
-                          PROT_READ | PROT_WRITE, MAP_SHARED, data_fd[i], 0);
+      mmap_data[i] =
+        mmap(NULL, i < HERMES_PROG_SLOT_COUNT ? HERMES_PROG_SLOT_SIZE
+                                              : HERMES_DATA_SLOT_SIZE,
+             PROT_READ | PROT_WRITE, MAP_SHARED, data_fd[i], 0);
 
       if (mmap_data[i] == NULL)
         return DELILAH_ERRORS_MEM_MMAP;
@@ -93,19 +92,10 @@ delilah_mem_alloc_data(struct delilah_t* delilah)
 return_t
 delilah_mem_alloc_shared(struct delilah_t* delilah)
 {
-  if ((shared_fd = open("/dev/delilah_shared0", O_RDWR)) != -1) {
-    mmap_shared = mmap(NULL, DELILAH_SHARED_SIZE, PROT_READ | PROT_WRITE,
-                       MAP_SHARED, shared_fd, 0);
-
-    if (mmap_shared == NULL)
-      return DELILAH_ERRORS_MEM_MMAP;
-
-    delilah->shared = mmap_shared;
-
-    return 0x0;
-  }
-
-  return DELILAH_ERRORS_MEM_DEV;
+  malloc_shared = aligned_alloc(4 * KiB, DELILAH_SHARED_SIZE);
+  if (!malloc_shared)
+    return DELILAH_ERRORS_OOM;
+  delilah->shared = malloc_shared;
 }
 
 void*
@@ -123,7 +113,7 @@ delilah_mem_get_data()
 void*
 delilah_mem_get_shared()
 {
-  return mmap_shared;
+  return malloc_shared;
 }
 
 return_t
@@ -208,8 +198,7 @@ delilah_mem_unalloc_data()
 return_t
 delilah_mem_unalloc_shared()
 {
-  close(shared_fd);
-  munmap(mmap_shared, DELILAH_SHARED_SIZE);
+  free(malloc_shared);
 }
 
 return_t

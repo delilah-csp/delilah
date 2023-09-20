@@ -26,7 +26,9 @@ struct delilah_bar0
   char rsv1[0x1000 - 0x58];
 
   struct hermes_cmd commands[HERMES_UBPF_ENGINES]; /* 0x1000 */
-  char rsv2[0x1000 - ((sizeof(struct hermes_cmd_req) + sizeof(struct hermes_cmd_res)) * HERMES_UBPF_ENGINES)];  /*        */
+  char rsv2[0x1000 -
+            ((sizeof(struct hermes_cmd_req) + sizeof(struct hermes_cmd_res)) *
+             HERMES_UBPF_ENGINES)]; /*        */
 
   struct delilah_cmd_ctrl cmdctrl[HERMES_UBPF_ENGINES]; /* 0x2000 */
 };
