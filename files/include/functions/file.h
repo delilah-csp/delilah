@@ -52,14 +52,18 @@ static size_t
 delilah_functions_file_direct_read(void* buffer, size_t size,
                                    const char* filename)
 {
-  return _delilah_functions_file_read(buffer, size, 0, filename, O_DIRECT);
+  // We must PAGE align (4096) for direct reads
+  return _delilah_functions_file_read(buffer, size - (size % 4096), 0, filename,
+                                      O_DIRECT);
 }
 
 static size_t
 delilah_functions_file_direct_read_offset(void* buffer, size_t size,
                                           size_t offset, const char* filename)
 {
-  return _delilah_functions_file_read(buffer, size, offset, filename, O_DIRECT);
+  // We must PAGE align (4096) for direct reads
+  return _delilah_functions_file_read(buffer, size - (size % 4096), offset,
+                                      filename, O_DIRECT);
 }
 
 static size_t
