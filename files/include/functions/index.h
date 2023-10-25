@@ -3,6 +3,7 @@
 
 #include "functions/debug.h"
 #include "functions/file.h"
+#include "functions/hw/filter.h"
 #include "functions/version.h"
 
 struct ext_func
@@ -44,6 +45,12 @@ static struct ext_func registered_functions[] = {
 
   /* Debug Module */
   {.idx = 20, .name = "delilah_debug_bench", &delilah_functions_debug_bench },
+
+  /* Memory Module */
+  {.idx = 30, .name = "delilah_memcpy", &memcpy },
+
+  /* HW Filter Module */
+  {.idx = 40, .name = "delilah_hw_filter_eq", &delilah_functions_hw_filter_eq }
 };
 
 #endif
