@@ -23,6 +23,7 @@ delilah_hermes_configure(struct delilah_t* delilah)
   bar0->ehdsoff = HERMES_DATA_LOC + (HERMES_PROG_SLOT_COUNT *
                                      HERMES_PROG_SLOT_SIZE); // Data slot offset
   bar0->ehdssze = HERMES_DATA_SLOT_SIZE;                     // Data slot size
+  bar0->ehsssze = DELILAH_SHARED_SIZE; // Shared data slot size
 
   snprintf(bar0->ehbld, 48, "Delilah v%i.%i.%i", DELILAH_VERSION_MAJOR,
            DELILAH_VERSION_MINOR, DELILAH_VERSION_BUILD); // Delilah version

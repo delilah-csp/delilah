@@ -23,7 +23,8 @@ struct delilah_bar0
   uint64_t ehpssze;
   uint64_t ehdsoff;
   uint64_t ehdssze;
-  char rsv1[0x1000 - 0x58];
+  uint64_t ehsssze;
+  char rsv1[0x1000 - 0x60];
 
   struct hermes_cmd commands[HERMES_UBPF_ENGINES]; /* 0x1000 */
   char rsv2[0x1000 -
