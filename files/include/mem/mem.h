@@ -21,4 +21,8 @@ return_t delilah_mem_unalloc_shared();
 return_t delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size,
                           uint32_t src_offset, uint32_t dst_offset);
 
+uint64_t delilah_mem_virt_to_phys(uint64_t virt);
+uint64_t delilah_mem_phys_to_virt(uint64_t phys);
+uint64_t delilah_mem_virt_to_slot(uint64_t virt);
+uint64_t delilah_mem_phys_to_slot(uint64_t phys);
 #endif
