@@ -72,7 +72,8 @@ delilah_functions_file_indirect_read(void* buffer, size_t size,
 {
   // We must PAGE align (4096) for direct reads
   void* align = aligned_alloc(4096, size);
-  size_t br = _delilah_functions_file_read(align, size - (size % 4096), 0, filename, O_DIRECT);
+  size_t br = _delilah_functions_file_read(align, size - (size % 4096), 0,
+                                           filename, O_DIRECT);
   if (copy)
     memcpy(buffer, align, size);
   free(align);
@@ -86,8 +87,8 @@ delilah_functions_file_indirect_read_offset(void* buffer, size_t size,
 {
   // We must PAGE align (4096) for direct reads
   void* align = aligned_alloc(4096, size);
-  size_t br =
-    _delilah_functions_file_read(align, size - (size % 4096), offset, filename, O_DIRECT);
+  size_t br = _delilah_functions_file_read(align, size - (size % 4096), offset,
+                                           filename, O_DIRECT);
   if (copy)
     memcpy(buffer, align, size);
   free(align);

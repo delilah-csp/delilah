@@ -20,11 +20,13 @@ struct command_t
 handler_t delilah_command_execute;
 handler_t delilah_command_execute_jit;
 handler_t delilah_command_clear_cache;
+handler_t delilah_command_clear_state;
 
 static struct command_t commands[] = {
   { HERMES_OPCODE_EXECUTE_SLOT, &delilah_command_execute },
   { HERMES_OPCODE_EXECUTE_SLOT_JIT, &delilah_command_execute_jit },
-  { DELILAH_OPCODE_CLEAR_CACHE, &delilah_command_clear_cache }
+  { DELILAH_OPCODE_CLEAR_CACHE, &delilah_command_clear_cache },
+  { DELILAH_OPCODE_CLEAR_STATE, &delilah_command_clear_state }
 };
 
 #endif
