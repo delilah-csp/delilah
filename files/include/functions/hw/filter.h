@@ -17,4 +17,76 @@ delilah_functions_hw_filter_eq(void* in, void* out, uint64_t num, uint64_t comp)
                            comp, 0);
 }
 
+static size_t
+delilah_functions_hw_filter_neq(void* in, void* out, uint64_t num,
+                                uint64_t comp)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_NEQ,
+                           comp, 0);
+}
+
+static size_t
+delilah_functions_hw_filter_lt(void* in, void* out, uint64_t num,
+                                uint64_t comp)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_LT,
+                           comp, 0);
+}
+
+static size_t
+delilah_functions_hw_filter_le(void* in, void* out, uint64_t num,
+                                uint64_t comp)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_LE,
+                           comp, 0);
+}
+
+static size_t
+delilah_functions_hw_filter_gt(void* in, void* out, uint64_t num,
+                                uint64_t comp)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_GT,
+                           comp, 0);
+}
+
+static size_t
+delilah_functions_hw_filter_ge(void* in, void* out, uint64_t num,
+                                uint64_t comp)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_GE,
+                           comp, 0);
+}
+
+static size_t
+delilah_functions_hw_filter_bw(void* in, void* out, uint64_t num,
+                                uint64_t comp1, uint64_t comp2)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_BW,
+                           comp1, comp2);
+}
+
+static size_t
+delilah_functions_hw_filter_bwi(void* in, void* out, uint64_t num,
+                                uint64_t comp1, uint64_t comp2)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num, DELILAH_FILTER_BWI,
+                           comp1, comp2);
+}
+
+static size_t
+delilah_functions_hw_filter_bwli(void* in, void* out, uint64_t num,
+                                uint64_t comp1, uint64_t comp2)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num,
+                           DELILAH_FILTER_BWLI, comp1, comp2);
+}
+
+static size_t
+delilah_functions_hw_filter_bwhi(void* in, void* out, uint64_t num,
+                                uint64_t comp1, uint64_t comp2)
+{
+  return delilah_hw_filter((uint64_t)in, (uint64_t)out, num,
+                           DELILAH_FILTER_BWHI, comp1, comp2);
+}
+
 #endif
