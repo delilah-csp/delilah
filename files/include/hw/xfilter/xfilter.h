@@ -89,8 +89,8 @@ void XFilter_EnableAutoRestart(XFilter* InstancePtr);
 void XFilter_DisableAutoRestart(XFilter* InstancePtr);
 u64 XFilter_Get_return(XFilter* InstancePtr);
 
-void XFilter_Set_in_r(XFilter* InstancePtr, u64 Data);
-u64 XFilter_Get_in_r(XFilter* InstancePtr);
+void XFilter_Set_in_value(XFilter* InstancePtr, u64 Data);
+u64 XFilter_Get_in_value(XFilter* InstancePtr);
 void XFilter_Set_out_r(XFilter* InstancePtr, u64 Data);
 u64 XFilter_Get_out_r(XFilter* InstancePtr);
 void XFilter_Set_num(XFilter* InstancePtr, u64 Data);

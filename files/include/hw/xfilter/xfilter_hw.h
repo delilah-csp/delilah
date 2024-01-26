@@ -1,6 +1,5 @@
 // ==============================================================
-// Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2019.1.3
-// (64-bit)
+// Vivado(TM) HLS - High-Level Synthesis from C, C++ and SystemC v2019.1.3 (64-bit)
 // Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 // ==============================================================
 // control
@@ -26,10 +25,10 @@
 //        bit 31~0 - ap_return[31:0] (Read)
 // 0x14 : Data signal of ap_return
 //        bit 31~0 - ap_return[63:32] (Read)
-// 0x1c : Data signal of in_r
-//        bit 31~0 - in_r[31:0] (Read/Write)
-// 0x20 : Data signal of in_r
-//        bit 31~0 - in_r[63:32] (Read/Write)
+// 0x1c : Data signal of in_value
+//        bit 31~0 - in_value[31:0] (Read/Write)
+// 0x20 : Data signal of in_value
+//        bit 31~0 - in_value[63:32] (Read/Write)
 // 0x24 : reserved
 // 0x28 : Data signal of out_r
 //        bit 31~0 - out_r[31:0] (Read/Write)
@@ -56,24 +55,24 @@
 // 0x5c : Data signal of comp2
 //        bit 31~0 - comp2[63:32] (Read/Write)
 // 0x60 : reserved
-// (SC = Self Clear, COR = Clear on Read, TOW = Toggle on Write, COH = Clear on
-// Handshake)
+// (SC = Self Clear, COR = Clear on Read, TOW = Toggle on Write, COH = Clear on Handshake)
 
-#define XFILTER_CONTROL_ADDR_AP_CTRL 0x00
-#define XFILTER_CONTROL_ADDR_GIE 0x04
-#define XFILTER_CONTROL_ADDR_IER 0x08
-#define XFILTER_CONTROL_ADDR_ISR 0x0c
-#define XFILTER_CONTROL_ADDR_AP_RETURN 0x10
-#define XFILTER_CONTROL_BITS_AP_RETURN 64
-#define XFILTER_CONTROL_ADDR_IN_R_DATA 0x1c
-#define XFILTER_CONTROL_BITS_IN_R_DATA 64
-#define XFILTER_CONTROL_ADDR_OUT_R_DATA 0x28
-#define XFILTER_CONTROL_BITS_OUT_R_DATA 64
-#define XFILTER_CONTROL_ADDR_NUM_DATA 0x34
-#define XFILTER_CONTROL_BITS_NUM_DATA 64
-#define XFILTER_CONTROL_ADDR_OP_DATA 0x40
-#define XFILTER_CONTROL_BITS_OP_DATA 64
-#define XFILTER_CONTROL_ADDR_COMP1_DATA 0x4c
-#define XFILTER_CONTROL_BITS_COMP1_DATA 64
-#define XFILTER_CONTROL_ADDR_COMP2_DATA 0x58
-#define XFILTER_CONTROL_BITS_COMP2_DATA 64
+#define XFILTER_CONTROL_ADDR_AP_CTRL       0x00
+#define XFILTER_CONTROL_ADDR_GIE           0x04
+#define XFILTER_CONTROL_ADDR_IER           0x08
+#define XFILTER_CONTROL_ADDR_ISR           0x0c
+#define XFILTER_CONTROL_ADDR_AP_RETURN     0x10
+#define XFILTER_CONTROL_BITS_AP_RETURN     64
+#define XFILTER_CONTROL_ADDR_IN_VALUE_DATA 0x1c
+#define XFILTER_CONTROL_BITS_IN_VALUE_DATA 64
+#define XFILTER_CONTROL_ADDR_OUT_R_DATA    0x28
+#define XFILTER_CONTROL_BITS_OUT_R_DATA    64
+#define XFILTER_CONTROL_ADDR_NUM_DATA      0x34
+#define XFILTER_CONTROL_BITS_NUM_DATA      64
+#define XFILTER_CONTROL_ADDR_OP_DATA       0x40
+#define XFILTER_CONTROL_BITS_OP_DATA       64
+#define XFILTER_CONTROL_ADDR_COMP1_DATA    0x4c
+#define XFILTER_CONTROL_BITS_COMP1_DATA    64
+#define XFILTER_CONTROL_ADDR_COMP2_DATA    0x58
+#define XFILTER_CONTROL_BITS_COMP2_DATA    64
+
