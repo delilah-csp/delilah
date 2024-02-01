@@ -54,20 +54,11 @@ static struct ext_func registered_functions[] = {
   {.idx = 41,
    .name = "delilah_hw_filter_neq",
    &delilah_functions_hw_filter_neq },
-  {.idx = 42, .name = "delilah_hw_filter_lt", &delilah_functions_hw_filter_lt },
-  {.idx = 43, .name = "delilah_hw_filter_le", &delilah_functions_hw_filter_le },
-  {.idx = 44, .name = "delilah_hw_filter_gt", &delilah_functions_hw_filter_gt },
-  {.idx = 45, .name = "delilah_hw_filter_ge", &delilah_functions_hw_filter_ge },
-  {.idx = 46, .name = "delilah_hw_filter_bw", &delilah_functions_hw_filter_bw },
-  {.idx = 47,
+  {.idx = 42, .name = "delilah_hw_filter_le", &delilah_functions_hw_filter_le },
+  {.idx = 43, .name = "delilah_hw_filter_ge", &delilah_functions_hw_filter_ge },
+  {.idx = 44,
    .name = "delilah_hw_filter_bwi",
    &delilah_functions_hw_filter_bwi },
-  {.idx = 48,
-   .name = "delilah_hw_filter_bwli",
-   &delilah_functions_hw_filter_bwli },
-  {.idx = 49,
-   .name = "delilah_hw_filter_bwhi",
-   &delilah_functions_hw_filter_bwhi }
 };
 
 #endif

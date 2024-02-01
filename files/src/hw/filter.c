@@ -22,14 +22,14 @@ delilah_hw_filter(uint64_t in, uint64_t out, uint64_t num, uint64_t op,
   log_debug("HW Filtering: %lld -> %lld, filter op %lld, num %lld, [%lld,%lld]",
             phys_in, phys_out, op, num, comp1, comp2);
 
-  //delilah_mem_sync_set(1, delilah_mem_virt_to_slot(in), 0, 0);
+  // delilah_mem_sync_set(1, delilah_mem_virt_to_slot(in), 0, 0);
   XFilter_Start(instance);
 
   while (!XFilter_IsDone(instance) && !XFilter_IsIdle(instance))
     usleep(1);
   return_t ret = XFilter_Get_return(instance);
 
-  //delilah_mem_sync_get(1, delilah_mem_virt_to_slot(out), 0, 0);
+  // delilah_mem_sync_get(1, delilah_mem_virt_to_slot(out), 0, 0);
 
   XFilter_Release(instance);
   free(instance);
