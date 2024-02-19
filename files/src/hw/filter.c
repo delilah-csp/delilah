@@ -3,11 +3,18 @@
 #include "util/log.h"
 
 return_t
-delilah_hw_filter(uint64_t in, uint64_t out, uint64_t num, uint64_t op,
-                  uint64_t comp1, uint64_t comp2)
+delilah_hw_filter(uint8_t eng, uint64_t in, uint64_t out, uint64_t num,
+                  uint64_t op, uint64_t comp1, uint64_t comp2)
 {
+  if (eng > DELILAH_NUM_FILTER_ENG) {
+    log_warn("HW Filtering on undefined engine: %u", eng);
+    return UINT64_MAX;
+  }
+
   XFilter* instance = malloc(sizeof(XFilter));
-  XFilter_Initialize(instance, "filterdev");
+  char identifier[16];
+  sprintf(identifier, "filter%u", eng);
+  XFilter_Initialize(instance, identifier);
 
   uint64_t phys_in = delilah_mem_virt_to_phys(in);
   uint64_t phys_out = delilah_mem_virt_to_phys(out);
@@ -19,8 +26,9 @@ delilah_hw_filter(uint64_t in, uint64_t out, uint64_t num, uint64_t op,
   XFilter_Set_comp1(instance, comp1);
   XFilter_Set_comp2(instance, comp2);
 
-  log_debug("HW Filtering: %lld -> %lld, filter op %lld, num %lld, [%lld,%lld]",
-            phys_in, phys_out, op, num, comp1, comp2);
+  log_debug("HW Filtering on eng %u: %lld -> %lld, filter op %lld, num %lld, "
+            "[%lld,%lld]",
+            eng, phys_in, phys_out, op, num, comp1, comp2);
 
   // delilah_mem_sync_set(1, delilah_mem_virt_to_slot(in), 0, 0);
   XFilter_Start(instance);
@@ -35,10 +43,4 @@ delilah_hw_filter(uint64_t in, uint64_t out, uint64_t num, uint64_t op,
   free(instance);
 
   return ret;
-}
-
-return_t
-delilah_hw_filter_join(struct delilah_t* delilah)
-{
-  // TODO
 }

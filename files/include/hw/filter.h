@@ -21,8 +21,9 @@ enum DELILAH_FILTER_OPS
   DELILAH_FILTER_BWI, /*BETWEEN inclusive:        [comp0,comp1]*/
 };
 
-return_t delilah_hw_filter(uint64_t in, uint64_t out, uint64_t num, uint64_t op,
-                           uint64_t comp1, uint64_t comp2);
-return_t delilah_hw_filter_join(struct delilah_t* delilah);
+#define DELILAH_NUM_FILTER_ENG 4
+
+return_t delilah_hw_filter(uint8_t eng, uint64_t in, uint64_t out, uint64_t num,
+                           uint64_t op, uint64_t comp1, uint64_t comp2);
 
 #endif
