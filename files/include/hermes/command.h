@@ -28,6 +28,12 @@ struct hermes_cmd_req
       volatile uint32_t flush_offset;
     } run_prog;
 
+    struct
+    {
+      volatile uint64_t size;
+      volatile uint64_t offset;
+    } clear_state;
+
     volatile uint8_t cmd_specific[24];
   };
 };

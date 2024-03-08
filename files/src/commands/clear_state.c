@@ -18,6 +18,8 @@ delilah_command_clear_state(struct delilah_thread_t* thread,
                             struct hermes_cmd_res* res,
                             struct delilah_t* delilah)
 {
-  memset(delilah->shared, 0, DELILAH_SHARED_SIZE);
-  return 0;
+  uint64_t size = req->clear_state.size == 0 ? DELILAH_SHARED_SIZE : req->clear_state.size;
+  log_debug("Clearing state %lld bytes, %lld offset", size, req->clear_state.offset);
+  memset(delilah->shared + req->clear_state.offset, 0, size);
+  return 0x0;
 }
