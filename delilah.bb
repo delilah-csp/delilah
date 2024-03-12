@@ -15,6 +15,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://include/functions/debug.h \
            file://include/functions/file.h \
            file://include/functions/index.h \
+           file://include/functions/tsl.h \
            file://include/functions/version.h \
            file://include/functions/hw/filter.h \
            file://include/hermes/command.h \
@@ -37,6 +38,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/commands/clear_state.c \
            file://src/commands/execute.c \
            file://src/commands/execute_jit.c \
+           file://src/functions/tsl.cpp \
            file://src/hermes/configure.c \
            file://src/hw/filter.c \
            file://src/hw/xfilter/xfilter.c \
@@ -45,6 +47,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/loader/loader.c \
            file://src/mem/udma.c \
            file://src/util/log.c \
+           file://tsl/* \
            file://ubpf/* \
            file://.profile \
           "

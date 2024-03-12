@@ -11,15 +11,20 @@ include_directories(include)
 add_subdirectory(ubpf)
 
 # Sources
-FILE(GLOB_RECURSE src src/*.c)
+FILE(GLOB_RECURSE src src/*.c src/*.cpp)
 add_executable(delilah ${src})
 
 # Add _GNU_SOURCE flag
 target_compile_definitions(delilah PRIVATE _GNU_SOURCE)
 
+# Add TSL library
+add_subdirectory(tsl)
+target_link_libraries(delilah INTERFACE tsl)
+target_include_directories(delilah PUBLIC tsl/include)
+
 # Libraries
-target_link_libraries(delilah pthread)
-target_link_libraries(delilah ubpf)
+target_link_libraries(delilah PRIVATE pthread)
+target_link_libraries(delilah PRIVATE ubpf)
 
 # Installation folder in Petalinux
 install(TARGETS delilah RUNTIME DESTINATION bin)

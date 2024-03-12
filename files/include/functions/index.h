@@ -4,6 +4,7 @@
 #include "functions/debug.h"
 #include "functions/file.h"
 #include "functions/hw/filter.h"
+#include "functions/tsl.h"
 #include "functions/version.h"
 
 struct ext_func
@@ -59,6 +60,20 @@ static struct ext_func registered_functions[] = {
   {.idx = 44,
    .name = "delilah_hw_filter_bwi",
    &delilah_functions_hw_filter_bwi },
+
+  /* TSL Module */
+  {.idx = 50,
+   .name = "delilah_tsl_filter_sequential",
+   &delilah_functions_tsl_filter_sequential },
+  {.idx = 51,
+   .name = "delilah_tsl_filter_neon",
+   &delilah_functions_tsl_filter_neon },
+  {.idx = 52,
+   .name = "delilah_tsl_filter_between_neon",
+   &delilah_functions_tsl_filter_between_neon },
+  {.idx = 53,
+   .name = "delilah_tsl_filter_equal_neon",
+   &delilah_functions_tsl_filter_equal_neon }
 };
 
 #endif
