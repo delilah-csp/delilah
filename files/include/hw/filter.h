@@ -23,7 +23,11 @@ enum DELILAH_FILTER_OPS
 
 #define DELILAH_NUM_FILTER_ENG 4
 
+static XFilter filter_engines[DELILAH_NUM_FILTER_ENG];
+
+return_t delilah_hw_filter_init(struct delilah_t* delilah);
+return_t delilah_hw_filter_deinit(struct delilah_t* delilah);
 return_t delilah_hw_filter(uint8_t eng, uint64_t in, uint64_t out, uint64_t num,
-                           uint64_t op, uint64_t comp1, uint64_t comp2);
+                           uint64_t op, uint32_t comp1, uint32_t comp2);
 
 #endif

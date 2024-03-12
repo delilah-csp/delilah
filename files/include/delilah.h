@@ -21,6 +21,8 @@ struct delilah_t
   struct delilah_bar0* bar0;
   void* program[HERMES_PROG_SLOT_COUNT];
   void* data[HERMES_DATA_SLOT_COUNT];
+
+  uint8_t static_shared;
   void* shared;
 
   struct ubpf_vm* engine[HERMES_UBPF_ENGINES];

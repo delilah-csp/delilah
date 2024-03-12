@@ -12,7 +12,7 @@
 
 static size_t
 delilah_functions_hw_filter_eq(uint8_t eng, void* in, void* out, uint64_t num,
-                               uint64_t comp)
+                               uint32_t comp)
 {
   return delilah_hw_filter(eng, (uint64_t)in, (uint64_t)out, num,
                            DELILAH_FILTER_EQ, comp, 0);
@@ -20,7 +20,7 @@ delilah_functions_hw_filter_eq(uint8_t eng, void* in, void* out, uint64_t num,
 
 static size_t
 delilah_functions_hw_filter_neq(uint8_t eng, void* in, void* out, uint64_t num,
-                                uint64_t comp)
+                                uint32_t comp)
 {
   return delilah_hw_filter(eng, (uint64_t)in, (uint64_t)out, num,
                            DELILAH_FILTER_NEQ, comp, 0);
@@ -28,7 +28,7 @@ delilah_functions_hw_filter_neq(uint8_t eng, void* in, void* out, uint64_t num,
 
 static size_t
 delilah_functions_hw_filter_le(uint8_t eng, void* in, void* out, uint64_t num,
-                               uint64_t comp)
+                               uint32_t comp)
 {
   return delilah_hw_filter(eng, (uint64_t)in, (uint64_t)out, num,
                            DELILAH_FILTER_LE, comp, 0);
@@ -36,7 +36,7 @@ delilah_functions_hw_filter_le(uint8_t eng, void* in, void* out, uint64_t num,
 
 static size_t
 delilah_functions_hw_filter_ge(uint8_t eng, void* in, void* out, uint64_t num,
-                               uint64_t comp)
+                               uint32_t comp)
 {
   return delilah_hw_filter(eng, (uint64_t)in, (uint64_t)out, num,
                            DELILAH_FILTER_GE, comp, 0);
@@ -44,7 +44,7 @@ delilah_functions_hw_filter_ge(uint8_t eng, void* in, void* out, uint64_t num,
 
 static size_t
 delilah_functions_hw_filter_bwi(uint8_t eng, void* in, void* out, uint64_t num,
-                                uint64_t comp1, uint64_t comp2)
+                                uint32_t comp1, uint32_t comp2)
 {
   return delilah_hw_filter(eng, (uint64_t)in, (uint64_t)out, num,
                            DELILAH_FILTER_BWI, comp1, comp2);

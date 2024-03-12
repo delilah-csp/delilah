@@ -112,19 +112,19 @@ XFilter_Get_return(XFilter* InstancePtr)
   return Data;
 }
 void
-XFilter_Set_in_value(XFilter* InstancePtr, u64 Data)
+XFilter_Set_in_r(XFilter* InstancePtr, u64 Data)
 {
   Xil_AssertVoid(InstancePtr != NULL);
   Xil_AssertVoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
   XFilter_WriteReg(InstancePtr->Control_BaseAddress,
-                   XFILTER_CONTROL_ADDR_IN_VALUE_DATA, (u32)(Data));
+                   XFILTER_CONTROL_ADDR_IN_R_DATA, (u32)(Data));
   XFilter_WriteReg(InstancePtr->Control_BaseAddress,
-                   XFILTER_CONTROL_ADDR_IN_VALUE_DATA + 4, (u32)(Data >> 32));
+                   XFILTER_CONTROL_ADDR_IN_R_DATA + 4, (u32)(Data >> 32));
 }
 
 u64
-XFilter_Get_in_value(XFilter* InstancePtr)
+XFilter_Get_in_r(XFilter* InstancePtr)
 {
   u64 Data;
 
@@ -132,9 +132,9 @@ XFilter_Get_in_value(XFilter* InstancePtr)
   Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
   Data = XFilter_ReadReg(InstancePtr->Control_BaseAddress,
-                         XFILTER_CONTROL_ADDR_IN_VALUE_DATA);
+                         XFILTER_CONTROL_ADDR_IN_R_DATA);
   Data += (u64)XFilter_ReadReg(InstancePtr->Control_BaseAddress,
-                               XFILTER_CONTROL_ADDR_IN_VALUE_DATA + 4)
+                               XFILTER_CONTROL_ADDR_IN_R_DATA + 4)
           << 32;
   return Data;
 }
@@ -224,58 +224,48 @@ XFilter_Get_op(XFilter* InstancePtr)
 }
 
 void
-XFilter_Set_comp1(XFilter* InstancePtr, u64 Data)
+XFilter_Set_comp1(XFilter* InstancePtr, u32 Data)
 {
   Xil_AssertVoid(InstancePtr != NULL);
   Xil_AssertVoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
   XFilter_WriteReg(InstancePtr->Control_BaseAddress,
-                   XFILTER_CONTROL_ADDR_COMP1_DATA, (u32)(Data));
-  XFilter_WriteReg(InstancePtr->Control_BaseAddress,
-                   XFILTER_CONTROL_ADDR_COMP1_DATA + 4, (u32)(Data >> 32));
+                   XFILTER_CONTROL_ADDR_COMP1_DATA, Data);
 }
 
-u64
+u32
 XFilter_Get_comp1(XFilter* InstancePtr)
 {
-  u64 Data;
+  u32 Data;
 
   Xil_AssertNonvoid(InstancePtr != NULL);
   Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
   Data = XFilter_ReadReg(InstancePtr->Control_BaseAddress,
                          XFILTER_CONTROL_ADDR_COMP1_DATA);
-  Data += (u64)XFilter_ReadReg(InstancePtr->Control_BaseAddress,
-                               XFILTER_CONTROL_ADDR_COMP1_DATA + 4)
-          << 32;
   return Data;
 }
 
 void
-XFilter_Set_comp2(XFilter* InstancePtr, u64 Data)
+XFilter_Set_comp2(XFilter* InstancePtr, u32 Data)
 {
   Xil_AssertVoid(InstancePtr != NULL);
   Xil_AssertVoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
   XFilter_WriteReg(InstancePtr->Control_BaseAddress,
-                   XFILTER_CONTROL_ADDR_COMP2_DATA, (u32)(Data));
-  XFilter_WriteReg(InstancePtr->Control_BaseAddress,
-                   XFILTER_CONTROL_ADDR_COMP2_DATA + 4, (u32)(Data >> 32));
+                   XFILTER_CONTROL_ADDR_COMP2_DATA, Data);
 }
 
-u64
+u32
 XFilter_Get_comp2(XFilter* InstancePtr)
 {
-  u64 Data;
+  u32 Data;
 
   Xil_AssertNonvoid(InstancePtr != NULL);
   Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
   Data = XFilter_ReadReg(InstancePtr->Control_BaseAddress,
                          XFILTER_CONTROL_ADDR_COMP2_DATA);
-  Data += (u64)XFilter_ReadReg(InstancePtr->Control_BaseAddress,
-                               XFILTER_CONTROL_ADDR_COMP2_DATA + 4)
-          << 32;
   return Data;
 }
 

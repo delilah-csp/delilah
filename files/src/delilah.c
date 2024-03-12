@@ -6,6 +6,7 @@
 #include "conf/version.h"
 #include "delilah.h"
 #include "hermes/configure.h"
+#include "hw/filter.h"
 #include "irq/irq.h"
 #include "loader/loader.h"
 #include "mem/mem.h"
@@ -52,12 +53,20 @@ main(int argc, char const* argv[])
   log_info("Starting Delilah v%i.%i.%i.", DELILAH_VERSION_MAJOR,
            DELILAH_VERSION_MINOR, DELILAH_VERSION_BUILD);
 
-  if (argc > 1 && strcmp(argv[1], "--debug") == 0) {
-    IGNORE_DEBUG = 0;
-    log_debug("Debug mode enabled.");
-  }
-
   struct delilah_t* delilah = malloc(sizeof(struct delilah_t));
+  delilah->static_shared = 0;
+
+  for (int i = 1; i < argc; ++i) {
+    if (strcmp(argv[i], "--debug") == 0) {
+      IGNORE_DEBUG = 0;
+      log_debug("Debug mode enabled.");
+    }
+
+    if (strcmp(argv[i], "--static-shared") == 0) {
+      delilah->static_shared = 1;
+      log_debug("Using static shared slot in PL memory.");
+    }
+  }
 
   if ((delilah->rv = delilah_alloc(delilah)) > 0) {
     log_error("Allocation error!");
@@ -79,6 +88,11 @@ main(int argc, char const* argv[])
     goto FATAL_EXIT;
   }
 
+  if ((delilah->rv = delilah_hw_filter_init(delilah)) > 0) {
+    log_error("Delilah HW filter configuration error!");
+    goto FATAL_EXIT;
+  }
+
   if ((delilah->rv = delilah_loader_start(delilah)) > 0) {
     log_error("Delilah core error!");
     goto FATAL_EXIT;
@@ -92,10 +106,13 @@ FATAL_EXIT:
 
 EXIT:
   delilah_loader_unload(delilah);
+  delilah_hw_filter_deinit(delilah);
   delilah_irq_close(delilah);
   delilah_mem_unalloc_data(delilah);
   delilah_mem_unalloc_bar(delilah);
   delilah_mem_alloc_shared(delilah);
+
+  free(delilah);
 
   log_info("Exiting ..");
 

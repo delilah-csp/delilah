@@ -89,18 +89,18 @@ void XFilter_EnableAutoRestart(XFilter* InstancePtr);
 void XFilter_DisableAutoRestart(XFilter* InstancePtr);
 u64 XFilter_Get_return(XFilter* InstancePtr);
 
-void XFilter_Set_in_value(XFilter* InstancePtr, u64 Data);
-u64 XFilter_Get_in_value(XFilter* InstancePtr);
+void XFilter_Set_in_r(XFilter* InstancePtr, u64 Data);
+u64 XFilter_Get_in_r(XFilter* InstancePtr);
 void XFilter_Set_out_r(XFilter* InstancePtr, u64 Data);
 u64 XFilter_Get_out_r(XFilter* InstancePtr);
 void XFilter_Set_num(XFilter* InstancePtr, u64 Data);
 u64 XFilter_Get_num(XFilter* InstancePtr);
 void XFilter_Set_op(XFilter* InstancePtr, u64 Data);
 u64 XFilter_Get_op(XFilter* InstancePtr);
-void XFilter_Set_comp1(XFilter* InstancePtr, u64 Data);
-u64 XFilter_Get_comp1(XFilter* InstancePtr);
-void XFilter_Set_comp2(XFilter* InstancePtr, u64 Data);
-u64 XFilter_Get_comp2(XFilter* InstancePtr);
+void XFilter_Set_comp1(XFilter* InstancePtr, u32 Data);
+u32 XFilter_Get_comp1(XFilter* InstancePtr);
+void XFilter_Set_comp2(XFilter* InstancePtr, u32 Data);
+u32 XFilter_Get_comp2(XFilter* InstancePtr);
 
 void XFilter_InterruptGlobalEnable(XFilter* InstancePtr);
 void XFilter_InterruptGlobalDisable(XFilter* InstancePtr);
