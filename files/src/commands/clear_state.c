@@ -23,5 +23,8 @@ delilah_command_clear_state(struct delilah_thread_t* thread,
   log_debug("Clearing state %lld bytes, %lld offset", size,
             req->clear_state.offset);
   memset(delilah->shared + req->clear_state.offset, 0, size);
+
+  res->status = HERMES_STATUS_SUCCESS;
+
   return 0x0;
 }
