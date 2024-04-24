@@ -2,11 +2,10 @@
 #include <cstdlib>
 // #include <tslintrin.hpp>
 #include <arm_neon.h>
-#include <iostream>
 #include <climits>
+#include <iostream>
 
-extern "C"
-{
+extern "C" {
 #include "functions/tsl.h"
 }
 

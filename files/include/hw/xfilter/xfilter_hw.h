@@ -24,34 +24,29 @@
 //        others - reserved
 // 0x10 : Data signal of ap_return
 //        bit 31~0 - ap_return[31:0] (Read)
-// 0x14 : Data signal of ap_return
-//        bit 31~0 - ap_return[63:32] (Read)
-// 0x1c : Data signal of in_r
+// 0x18 : Data signal of in_r
 //        bit 31~0 - in_r[31:0] (Read/Write)
-// 0x20 : Data signal of in_r
+// 0x1c : Data signal of in_r
 //        bit 31~0 - in_r[63:32] (Read/Write)
-// 0x24 : reserved
-// 0x28 : Data signal of out_r
+// 0x20 : reserved
+// 0x24 : Data signal of out_r
 //        bit 31~0 - out_r[31:0] (Read/Write)
-// 0x2c : Data signal of out_r
+// 0x28 : Data signal of out_r
 //        bit 31~0 - out_r[63:32] (Read/Write)
-// 0x30 : reserved
-// 0x34 : Data signal of num
+// 0x2c : reserved
+// 0x30 : Data signal of num
 //        bit 31~0 - num[31:0] (Read/Write)
-// 0x38 : Data signal of num
-//        bit 31~0 - num[63:32] (Read/Write)
+// 0x34 : reserved
+// 0x38 : Data signal of op
+//        bit 7~0 - op[7:0] (Read/Write)
+//        others  - reserved
 // 0x3c : reserved
-// 0x40 : Data signal of op
-//        bit 31~0 - op[31:0] (Read/Write)
-// 0x44 : Data signal of op
-//        bit 31~0 - op[63:32] (Read/Write)
-// 0x48 : reserved
-// 0x4c : Data signal of comp1
+// 0x40 : Data signal of comp1
 //        bit 31~0 - comp1[31:0] (Read/Write)
-// 0x50 : reserved
-// 0x54 : Data signal of comp2
+// 0x44 : reserved
+// 0x48 : Data signal of comp2
 //        bit 31~0 - comp2[31:0] (Read/Write)
-// 0x58 : reserved
+// 0x4c : reserved
 // (SC = Self Clear, COR = Clear on Read, TOW = Toggle on Write, COH = Clear on
 // Handshake)
 
@@ -60,16 +55,16 @@
 #define XFILTER_CONTROL_ADDR_IER 0x08
 #define XFILTER_CONTROL_ADDR_ISR 0x0c
 #define XFILTER_CONTROL_ADDR_AP_RETURN 0x10
-#define XFILTER_CONTROL_BITS_AP_RETURN 64
-#define XFILTER_CONTROL_ADDR_IN_R_DATA 0x1c
+#define XFILTER_CONTROL_BITS_AP_RETURN 32
+#define XFILTER_CONTROL_ADDR_IN_R_DATA 0x18
 #define XFILTER_CONTROL_BITS_IN_R_DATA 64
-#define XFILTER_CONTROL_ADDR_OUT_R_DATA 0x28
+#define XFILTER_CONTROL_ADDR_OUT_R_DATA 0x24
 #define XFILTER_CONTROL_BITS_OUT_R_DATA 64
-#define XFILTER_CONTROL_ADDR_NUM_DATA 0x34
-#define XFILTER_CONTROL_BITS_NUM_DATA 64
-#define XFILTER_CONTROL_ADDR_OP_DATA 0x40
-#define XFILTER_CONTROL_BITS_OP_DATA 64
-#define XFILTER_CONTROL_ADDR_COMP1_DATA 0x4c
+#define XFILTER_CONTROL_ADDR_NUM_DATA 0x30
+#define XFILTER_CONTROL_BITS_NUM_DATA 32
+#define XFILTER_CONTROL_ADDR_OP_DATA 0x38
+#define XFILTER_CONTROL_BITS_OP_DATA 8
+#define XFILTER_CONTROL_ADDR_COMP1_DATA 0x40
 #define XFILTER_CONTROL_BITS_COMP1_DATA 32
-#define XFILTER_CONTROL_ADDR_COMP2_DATA 0x54
+#define XFILTER_CONTROL_ADDR_COMP2_DATA 0x48
 #define XFILTER_CONTROL_BITS_COMP2_DATA 32

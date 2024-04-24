@@ -27,8 +27,8 @@ delilah_hw_filter_deinit(struct delilah_t* delilah)
 }
 
 return_t
-delilah_hw_filter(uint8_t eng, uint64_t in, uint64_t out, uint64_t num,
-                  uint64_t op, uint32_t comp1, uint32_t comp2)
+delilah_hw_filter(uint8_t eng, uint64_t in, uint64_t out, uint32_t num,
+                  uint8_t op, uint32_t comp1, uint32_t comp2)
 {
   if (eng > DELILAH_NUM_FILTER_ENG) {
     log_warn("HW Filtering on undefined engine: %u", eng);
@@ -51,11 +51,11 @@ delilah_hw_filter(uint8_t eng, uint64_t in, uint64_t out, uint64_t num,
   XFilter_Set_comp1(instance, comp1);
   XFilter_Set_comp2(instance, comp2);
 
-  log_debug("HW Filtering on eng %u: %lld -> %lld, filter op %lld, num %lld, "
-            "[%lld,%lld]",
+  log_debug("HW Filtering on eng %u: %llu -> %llu, filter op %u, num %u, "
+            "[%u,%u]",
             eng, phys_in, phys_out, op, num, comp1, comp2);
 
-  uint64_t size = num * 4096 * sizeof(uint32_t);
+  uint64_t size = num * 256 * sizeof(uint32_t);
   if (slot_in == HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT) {
     delilah_mem_sync_set(2, 0, size, offz_in);
     log_debug("HWF Flush Shared (%llu, %llu)", size, offz_in);
