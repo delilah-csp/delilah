@@ -38,6 +38,7 @@ SRC_URI = "file://CMakeLists.txt \
            file://src/commands/clear_state.c \
            file://src/commands/execute.c \
            file://src/commands/execute_jit.c \
+           file://src/functions/tsl.cpp \
            file://src/hermes/configure.c \
            file://src/hw/filter.c \
            file://src/hw/xfilter/xfilter.c \
