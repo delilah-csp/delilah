@@ -322,31 +322,26 @@ delilah_mem_copy(uint8_t src, uint8_t dst, uint32_t size, uint32_t src_offset,
 uint64_t
 delilah_mem_virt_to_phys(uint64_t virt)
 {
-  for (int i = 0; i < HERMES_DATA_SLOT_COUNT; i++) {
-    if (virt >= (uint64_t)mmap_data[HERMES_PROG_SLOT_COUNT + i] &&
-        virt < (uint64_t)mmap_data[HERMES_PROG_SLOT_COUNT + i] +
-                 HERMES_DATA_SLOT_SIZE) {
-      uint64_t phys = HERMES_DATA_LOC; // Start of physical addressing space
-      phys +=
-        HERMES_PROG_SLOT_COUNT *
-        HERMES_PROG_SLOT_SIZE; // Skip over physical addresses for program slots
-      phys +=
-        i * HERMES_DATA_SLOT_SIZE; // Skip over already iterated data slots
-      phys +=
-        virt -
-        (uint64_t)mmap_data[HERMES_PROG_SLOT_COUNT + i]; // Add offset to slot
-      return phys;
-    }
-  }
+  uint64_t slot = delilah_mem_virt_to_slot(virt);
+  if (slot == -1)
+    return -1;
 
-  if (static_shared && virt >= (uint64_t)shared &&
-      virt < ((uint64_t)shared + DELILAH_SHARED_SIZE)) {
+  if (static_shared &&
+      slot == HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT) {
     uint64_t phys = DELILAH_SHARED_LOC;
     phys += (virt - (uint64_t)shared);
     return phys;
   }
 
-  return -1;
+  uint64_t phys = HERMES_DATA_LOC; // Start of physical addressing space
+  phys +=
+    HERMES_PROG_SLOT_COUNT *
+    HERMES_PROG_SLOT_SIZE; // Skip over physical addresses for program slots
+  phys += slot * HERMES_DATA_SLOT_SIZE; // Skip over already iterated data slots
+  phys +=
+    virt -
+    (uint64_t)mmap_data[HERMES_PROG_SLOT_COUNT + slot]; // Add offset to slot
+  return phys;
 }
 
 uint64_t
@@ -371,20 +366,16 @@ delilah_mem_virt_to_slot(uint64_t virt)
 uint64_t
 delilah_mem_virt_to_offz(uint64_t virt)
 {
-  for (int i = 0; i < HERMES_DATA_SLOT_COUNT; i++) {
-    if (virt >= (uint64_t)mmap_data[HERMES_PROG_SLOT_COUNT + i] &&
-        virt < (uint64_t)mmap_data[HERMES_PROG_SLOT_COUNT + i] +
-                 HERMES_DATA_SLOT_SIZE) {
-      return virt -
-             (uint64_t)
-               mmap_data[HERMES_PROG_SLOT_COUNT + i]; // Add offset to slot
-    }
-  }
+  uint64_t slot = delilah_mem_virt_to_slot(virt);
+  if (slot == -1)
+    return -1;
 
-  if (static_shared && virt >= (uint64_t)shared &&
-      virt < ((uint64_t)shared + DELILAH_SHARED_SIZE)) {
+  if (static_shared &&
+      slot == HERMES_PROG_SLOT_COUNT + HERMES_DATA_SLOT_COUNT) {
     return (virt - (uint64_t)shared);
   }
 
-  return -1;
+  return virt -
+         (uint64_t)
+           mmap_data[HERMES_PROG_SLOT_COUNT + slot]; // Add offset to slot
 }
